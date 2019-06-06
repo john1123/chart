@@ -2,8 +2,9 @@
 
 require_once 'autoloader.php';
 
-$oMoex = new Moex();
-$data = $oMoex->load('lkoh', 30);
+
+$oMoex = new \Exchange\Moex('lkoh');
+$data = $oMoex->load(30);
 
 ?><!DOCTYPE html>
 <html lang="en">

@@ -1,30 +1,37 @@
 <?php
 
-class Moex
+namespace Exchange;
+
+use Cache\File as Cache;
+use Helper\Arr;
+
+class Moex extends \Base
 {
 
-    protected $objCache;
+    protected $ticker;
+    protected $oCache;
     const DATES_FORMAT = 'Y-m-d';
 
-    public function __construct()
+    public function __construct($ticker, array $aOptions=[])
     {
-        $this->objCache = new Cache\File();
+        $this->ticker = $ticker;
+        $this->oCache = new Cache($aOptions);
+        parent::__construct($aOptions);
     }
 
-    public function load($ticker, $depth=30) {
+    public function load($depth) {
         $arResult = [];
-        $this->ticker = $ticker;
         $offset = 0;
         do {
             $dateTill = date(self::DATES_FORMAT, strtotime('-' . $offset . ' days'));
             $dateFrom = date(self::DATES_FORMAT, strtotime('-' . ($offset+99) . ' days'));
 
-            $dataJSON = $this->loadInterval($ticker, $dateFrom, $dateTill);
+            $dataJSON = $this->loadInterval($dateFrom, $dateTill);
             $arDecoded = json_decode($dataJSON, true);
-            $arData = $arDecoded['history']['data'];
-            $this->shortName = $arData[0][2];
+            $arData = Arr::get($arDecoded, 'history->data', []);
+            $this->shortName = Arr::get($arData, '0->2', '');
             foreach($arData as $data) {
-                $arResult[ $data[1] ] = $data[11];
+                $arResult[ Arr::get($data, 1, '') ] = Arr::get($data, 11, '');
             }
             $offset += 100;
             if (count($arResult) >= $depth) {
@@ -38,21 +45,21 @@ class Moex
         return $arResult;
     }
 
-    public function loadInterval($ticker, $dateFrom, $dateTill='') {
+    public function loadInterval($dateFrom, $dateTill='') {
         if (strlen($dateTill) == 0) {
             $dateTill = date(self::DATES_FORMAT);
         }
-        $cacheName = strtolower($ticker . '.from-' . $dateFrom . '.till-' . $dateTill);
-        $dataJSON = $this->objCache->get($cacheName);
+        $cacheName = strtolower($this->ticker . '.from-' . $dateFrom . '.till-' . $dateTill);
+        $dataJSON = $this->oCache->get($cacheName);
         if(strlen($dataJSON) > 0) {
             return $dataJSON;
         }
-        $uri  = 'https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/'.$ticker.'.json';
+        $uri  = 'https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/'.$this->ticker.'.json';
         $uri .= '?from=' . $dateFrom;
         $uri .= '&till=' . $dateTill;
         $uri .= '&iss.meta=off';
         $dataJSON = file_get_contents($uri);
-        $this->objCache->set($cacheName, $dataJSON);
+        $this->oCache->set($cacheName, $dataJSON);
         return $dataJSON;
     }
 
