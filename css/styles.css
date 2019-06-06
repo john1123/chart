@@ -8,3 +8,35 @@
 #input_text {
     width: 500pt;
 }
+
+.chart {
+    position: absolute;
+    /* border: 1px solid #777; */
+    padding: 0;
+    margin: 0;
+}
+.green {
+    background: #72bf44;
+}
+.red {
+    background: #ed1c24;
+}
+.bar {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+}
+.bar {
+    cursor: default;
+}
+.bar:hover {
+    border: 2px solid #555;
+    margin: -2px;
+}
+.bar div {
+    position: relative;
+    font-size: 10px;
+    font-family: sans-serif;
+    text-align: center;
+}

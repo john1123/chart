@@ -3,13 +3,18 @@
 require_once 'autoloader.php';
 
 $code = \Helper\Arr::get($_GET, 'code', '');
-$depth = \Helper\Arr::get($_GET, 'depth', 30);
+$depth = \Helper\Arr::get($_GET, 'depth', 60);
 
 $fullText='';
-$data = [];
+$aData = [];
 if (strlen($code) > 0) {
     $oMoex = new \Exchange\Moex($code);
-    $data = $oMoex->load($depth);
+    $aData = $oMoex->load($depth);
+
+    $oMain = new \Chart\ThreeLinesBreak\Sequence($aData);
+    $aBlocks = $oMain->getBlocks();
+    $oDisplay = new \Chart\ThreeLinesBreak\Display(800, 400);
+    $oDisplay->setBlocks($aBlocks);
 
     $aActive = Data::searchData($code);
     $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
@@ -69,9 +74,43 @@ if (strlen($code) > 0) {
     </div>
 </nav>
 
+<?php if (strlen($code) > 1): ?>
+
 <div class="container">
-    <pre><?= print_r($data, true) ?></pre>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab_chart" data-toggle="tab">Главная</a></li>
+        <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_chart">
+            <br/><?= $oDisplay->getOutput() ?><br>
+        </div>
+        <div class="tab-pane fade" id="tab_data">
+            <div class="row">
+                <div class="col-sm-3">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Цена закрытия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($aData as $date => $price) {
+                            echo '<tr><td>' . date('d.m.Y', strtotime($date)) . '</td><td>' . $price . '</td></tr>';
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-9"></div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<?php endif; // Если переменная $code есть ?>
 
 <!-- scripts -->
 <script src="https://cdn.jsdelivr.net/jquery/2.2.4/jquery.js"></script>
