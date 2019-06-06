@@ -3,18 +3,13 @@
 require_once 'autoloader.php';
 
 $code = \Helper\Arr::get($_GET, 'code', '');
-$depth = \Helper\Arr::get($_GET, 'depth', 60);
+$depth = \Helper\Arr::get($_GET, 'depth', 50);
 
 $fullText='';
 $aData = [];
 if (strlen($code) > 0) {
     $oMoex = new \Exchange\Moex($code);
     $aData = $oMoex->load($depth);
-
-    $oMain = new \Chart\ThreeLinesBreak\Sequence($aData);
-    $aBlocks = $oMain->getBlocks();
-    $oDisplay = new \Chart\ThreeLinesBreak\Display(800, 400);
-    $oDisplay->setBlocks($aBlocks);
 
     $aActive = Data::searchData($code);
     $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
@@ -67,6 +62,15 @@ if (strlen($code) > 0) {
                     <input type="text" class="form-control" value="<?= str_replace('"', '&quot;', $fullText) ?>" placeholder="Акция" id="input_text">
                     <input type="hidden" name="code" value="<?= $code ?>" id="input_code"/>
                 </div>
+                <div class="form-group">
+                    <select  class="form-control" name="depth">
+                        <option value="30"<?=  ($depth == 25)  ? ' selected' : '' ?>>30</option>
+                        <option value="50"<?=  ($depth == 50)  ? ' selected' : '' ?>>50</option>
+                        <option value="75"<?=  ($depth == 75)  ? ' selected' : '' ?>>75</option>
+                        <option value="100"<?= ($depth == 100) ? ' selected' : '' ?>>100</option>
+                    </select>
+                </div>
+
                 <button type="submit" class="btn btn-primary" id="input_submit">Показать</button>
                 <a href="/" class="btn btn-default">Очистить</a>
             </form>
@@ -83,7 +87,9 @@ if (strlen($code) > 0) {
     </ul>
     <div class="tab-content">
         <div class="tab-pane active fade in" id="tab_chart">
-            <br/><?= $oDisplay->getOutput() ?><br>
+            <div id="chart_placeholder">
+
+            </div>
         </div>
         <div class="tab-pane fade" id="tab_data">
             <div class="row">
@@ -116,6 +122,10 @@ if (strlen($code) > 0) {
 <script src="https://cdn.jsdelivr.net/jquery/2.2.4/jquery.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
+<script>
+    var code = "<?= $code ?>";
+    var depth = <?= $depth ?>;
+</script>
 <script src="js/scripts.js"></script>
 </body>
 </html>
