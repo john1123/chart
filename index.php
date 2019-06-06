@@ -2,19 +2,72 @@
 
 require_once 'autoloader.php';
 
+$code = \Helper\Arr::get($_GET, 'code', '');
+$depth = \Helper\Arr::get($_GET, 'depth', 30);
 
-$oMoex = new \Exchange\Moex('lkoh');
-$data = $oMoex->load(30);
+$fullText='';
+$data = [];
+if (strlen($code) > 0) {
+    $oMoex = new \Exchange\Moex($code);
+    $data = $oMoex->load($depth);
+
+    $aActive = Data::searchData($code);
+    $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
+}
 
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title><?= $fullText ?></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Марка и переключение сгруппированы для лучшего мобильного дисплея -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Избранное <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="?code=SBER">[SBER] Сбербанк России ПАО ао</a></li>
+                        <li><a href="?code=GAZP">[GAZP] "Газпром" (ПАО) ао</a></li>
+                        <li><a href="?code=LKOH">[LKOH] НК ЛУКОЙЛ (ПАО) -о</a></li>
+                        <li><a href="?code=SBERP">[SBERP] Сбербанк России ПАО ап</a></li>
+                        <li><a href="?code=GMKN">[GMKN] ГМК "Нор.Никель" ПАО ао</a></li>
+                        <li class="divider"></li>
+                        <li><a href="?code=PHOR">[PHOR] ФосАгро ПАОо</a></li>
+                        <li><a href="?code=TGKA">[TGKA] ао ПАО "ТГК-1"</a></li>
+                        <li><a href="?code=DSKY">[DSKY] ПАО Детский мир</a></li>
+                        <li><a href="?code=ALRS">[ALRS] АЛРОСА ПАО ао</a></li>
+                        <li><a href="?code=MTLRP">[MTLRP] Мечел ПАО ап</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Очистить избранное</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" value="<?= str_replace('"', '&quot;', $fullText) ?>" placeholder="Акция" id="input_text">
+                    <input type="hidden" name="code" value="<?= $code ?>" id="input_code"/>
+                </div>
+                <button type="submit" class="btn btn-primary" id="input_submit">Показать</button>
+                <a href="/" class="btn btn-default">Очистить</a>
+            </form>
+        </div>
+    </div>
+</nav>
 
 <div class="container">
     <pre><?= print_r($data, true) ?></pre>
