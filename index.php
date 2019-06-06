@@ -53,7 +53,7 @@ if (strlen($code) > 0) {
                         <li><a href="?code=ALRS">[ALRS] АЛРОСА ПАО ао</a></li>
                         <li><a href="?code=MTLRP">[MTLRP] Мечел ПАО ап</a></li>
                         <li class="divider"></li>
-                        <li><a href="#">Очистить избранное</a></li>
+                        <li><a href="javascript:alert('В разработке')">Очистить избранное</a></li>
                     </ul>
                 </li>
             </ul>
@@ -85,13 +85,12 @@ if (strlen($code) > 0) {
         <li class="active"><a href="#tab_chart" data-toggle="tab">Главная</a></li>
         <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
     </ul>
+</div>
     <div class="tab-content">
         <div class="tab-pane active fade in" id="tab_chart">
-            <div id="chart_placeholder">
-
-            </div>
+            <div id="chart_placeholder"></div>
         </div>
-        <div class="tab-pane fade" id="tab_data">
+        <div class="container tab-pane fade" id="tab_data">
             <div class="row">
                 <div class="col-sm-3">
                     <table class="table table-condensed table-striped">
@@ -103,6 +102,7 @@ if (strlen($code) > 0) {
                         </thead>
                         <tbody>
                         <?php
+                        $aData = array_reverse($aData);
                         foreach ($aData as $date => $price) {
                             echo '<tr><td>' . date('d.m.Y', strtotime($date)) . '</td><td>' . $price . '</td></tr>';
                         }
@@ -114,7 +114,6 @@ if (strlen($code) > 0) {
             </div>
         </div>
     </div>
-</div>
 
 <?php endif; // Если переменная $code есть ?>
 

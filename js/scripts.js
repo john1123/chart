@@ -8,7 +8,7 @@ $(document).ready(function() {
         $inputSubmit.prop('disabled',true);
     }
     var width = $chartPlaceholder.width();
-    var height = (width/2).toFixed();
+    var height = (width/3).toFixed();
     $chartPlaceholder.load("/chart.php?code=" + code + "&width=" + width + "&height=" + height + "&depth=" + depth);
     $inputText.autocomplete({
         serviceUrl: 'autocomplete.php',
