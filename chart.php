@@ -11,6 +11,16 @@ if (strlen($code) > 0) {
     $oMoex = new \Exchange\Moex($code);
     $aData = $oMoex->load($depth);
 
+    // убираем все дни с нулевой ценой
+    $aClean = [];
+    foreach ($aData as $date => $price) {
+        if ($price > 0) {
+            $aClean[$date] = $price;
+        }
+    }
+    $aData = $aClean;
+
+
     $oMain = new \Chart\ThreeLinesBreak\Sequence($aData);
     $aBlocks = $oMain->getBlocks();
     $oDisplay = new \Chart\ThreeLinesBreak\Display($width, $height);

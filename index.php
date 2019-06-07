@@ -11,6 +11,14 @@ if (strlen($code) > 0) {
     $oMoex = new \Exchange\Moex($code);
     $aData = $oMoex->load($depth);
 
+    // убираем все дни с нулевой ценой
+    $emptyDays = 0;
+    foreach ($aData as $date => $price) {
+        if ($price > 0) {} else {
+            $emptyDays++;
+        }
+    }
+
     $aActive = Data::searchData($code);
     $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
 }
@@ -21,6 +29,8 @@ if (strlen($code) > 0) {
     <meta charset="UTF-8">
     <title><?= $fullText ?></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/select2.min.css">
+    <link rel="stylesheet" href="css/select2-bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -59,8 +69,9 @@ if (strlen($code) > 0) {
             </ul>
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
-                    <input type="text" class="form-control" value="<?= str_replace('"', '&quot;', $fullText) ?>" placeholder="Акция" id="input_text">
-                    <input type="hidden" name="code" value="<?= $code ?>" id="input_code"/>
+                <select id="input_code" name="code" data-placeholder="Select a state" class="form-control select2-single">
+<?php foreach (Data::getData() as $aStock) echo '                    <option value="' . $aStock[3] . '"' . ($aStock[3] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[3] . '] ' . $aStock[1] . "</option>\n"; ?>
+                </select>
                 </div>
                 <div class="form-group">
                     <select  class="form-control" name="depth">
@@ -80,6 +91,12 @@ if (strlen($code) > 0) {
 
 <?php if (strlen($code) > 1): ?>
 
+<?php if ($emptyDays > 0) : ?><div class="container">
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Внимание!</strong> В течение нескольких деней (<?= $emptyDays ?>) по инструменту не было сделок. Эти дни будут пропущены на графике.
+    </div>
+</div><? endif; ?>
 <div class="container">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_chart" data-toggle="tab">Главная</a></li>
@@ -121,6 +138,7 @@ if (strlen($code) > 0) {
 <script src="https://cdn.jsdelivr.net/jquery/2.2.4/jquery.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
+<script src="js/select2.min.js"></script>
 <script>
     var code = "<?= $code ?>";
     var depth = <?= $depth ?>;
