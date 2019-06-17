@@ -74,7 +74,7 @@ if (strlen($code) > 0) {
                 </select>
                 </div>
                 <div class="form-group">
-                    <select  class="form-control" name="depth">
+                    <select  class="form-control" name="depth" title="Данные за сколько дней использовать для графика">
                         <option value="30"<?=  ($depth == 25)  ? ' selected' : '' ?>>30</option>
                         <option value="50"<?=  ($depth == 50)  ? ' selected' : '' ?>>50</option>
                         <option value="75"<?=  ($depth == 75)  ? ' selected' : '' ?>>75</option>
@@ -101,16 +101,24 @@ if (strlen($code) > 0) {
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_chart" data-toggle="tab">Главная</a></li>
         <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
+        <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li>
     </ul>
 </div>
     <div class="tab-content">
         <div class="tab-pane active fade in" id="tab_chart">
             <div id="chart_placeholder"></div>
         </div>
+        <div class=" container tab-pane fade" id="tab_url">
+            <br/>
+            <br/>
+            <ul>
+                <li><a target="_blank" href="https://www.moex.com/ru/issue.aspx?code=<?= $code ?>"><?= $fullText ?> на сайте МосБиржи</a></li>
+            </ul>
+        </div>
         <div class="container tab-pane fade" id="tab_data">
             <div class="row">
                 <div class="col-sm-3">
-                    <table class="table table-condensed table-striped">
+                    <?php if (count($aData) > 0) { ?><table class="table table-condensed table-striped">
                         <thead>
                         <tr>
                             <th>Дата</th>
@@ -125,7 +133,7 @@ if (strlen($code) > 0) {
                         }
                         ?>
                         </tbody>
-                    </table>
+                    </table><?php } else { ?><div>Нет данных</div><?php }?>
                 </div>
                 <div class="col-sm-9"></div>
             </div>

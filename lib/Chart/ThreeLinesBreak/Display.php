@@ -2,8 +2,6 @@
 
 namespace Chart\ThreeLinesBreak;
 
-use Chart\ChartException;
-
 class Display extends \Chart\Base
 {
     protected $divWidth;
@@ -53,16 +51,25 @@ class Display extends \Chart\Base
         $class = $block->getOpenPrice() < $block->getClosePrice() ? 'green' : 'red';
 
         if ($block->getOpenPrice() > $block->getClosePrice()) {
-            $title = $block->getOpenDate() . ': ' . $block->getOpenPrice();
-            //$title .= '&#13;&#10;' . self::niceDifference($block->getOpenDate(), $block->getCloseDate()) . '&#13;&#10;';
+            $title = $block->getOpenPrice();
             $title .= '&#13;&#10;';
-            $title .= $block->getCloseDate() . ': ' . $block->getClosePrice();
+            $title .= $block->getClosePrice();
         } else {
-            $title = $block->getCloseDate() . ': ' . $block->getClosePrice();
-            //$title .= '&#13;&#10;' . self::niceDifference($block->getOpenDate(), $block->getCloseDate()) . '&#13;&#10;';
+            $title = $block->getClosePrice();
             $title .= '&#13;&#10;';
-            $title .= $block->getOpenDate() . ': ' . $block->getOpenPrice();
+            $title .= $block->getOpenPrice();
         }
+//        if ($block->getOpenPrice() > $block->getClosePrice()) {
+//            $title = $block->getOpenDate() . ': ' . $block->getOpenPrice();
+//            //$title .= '&#13;&#10;' . self::niceDifference($block->getOpenDate(), $block->getCloseDate()) . '&#13;&#10;';
+//            $title .= '&#13;&#10;';
+//            $title .= $block->getCloseDate() . ': ' . $block->getClosePrice();
+//        } else {
+//            $title = $block->getCloseDate() . ': ' . $block->getClosePrice();
+//            //$title .= '&#13;&#10;' . self::niceDifference($block->getOpenDate(), $block->getCloseDate()) . '&#13;&#10;';
+//            $title .= '&#13;&#10;';
+//            $title .= $block->getOpenDate() . ': ' . $block->getOpenPrice();
+//        }
 
         $blockHeight = !$withPrices && $blockHeight < 1 ? 1 : $blockHeight;
         $style  = 'width:' . $blockWidth . 'px;height:' . $blockHeight . 'px;';
@@ -82,7 +89,7 @@ class Display extends \Chart\Base
             }
             return $min;
         }
-        throw new ChartException('Empty blocks list');
+        throw new Exception('Empty blocks list');
     }
     protected function getMax()
     {
@@ -93,7 +100,7 @@ class Display extends \Chart\Base
             }
             return $max;
         }
-        throw new ChartException('Empty blocks list');
+        throw new Exception('Empty blocks list');
     }
 
     function translateCoordinate($price)

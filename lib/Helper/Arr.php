@@ -34,6 +34,16 @@ class Arr
         return $default;
     }
 
+    public static function find($array, $value, $default = -1)
+    {
+        foreach ($array as $k => $v) {
+            if ($array[$k] == $value) {
+                return $k;
+            }
+        }
+        return $default;
+    }
+
     /**
      * Get data from multi-dimension array
      * @param $array - Source array

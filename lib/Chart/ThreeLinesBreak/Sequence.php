@@ -2,6 +2,8 @@
 
 namespace Chart\ThreeLinesBreak;
 
+use Chart\ChartException;
+
 class Sequence extends \Chart\Base
 {
     /** Сколько блоков учитывается */
@@ -25,12 +27,12 @@ class Sequence extends \Chart\Base
     }
 
     /**
-     * @throws Exception
+     * @throws ChartException
      */
     protected function generateBlocks()
     {
         if (!is_array($this->aData) || count($this->aData) < 1) {
-            throw new Exception('Empty data');
+            throw new ChartException('Данных об биржи не получено');
         }
         $this->aBlocks = [];
         $idx = 0;
@@ -79,7 +81,7 @@ class Sequence extends \Chart\Base
             }
         } while ($block = prev($this->aBlocks));
         if ($min < 0) {
-            throw new Exception('Minimal value not found', self::EXCEPTION_OUT_OF_RANGE);
+            throw new ChartException('Не удалось найти инимальное значение', self::EXCEPTION_OUT_OF_RANGE);
         }
         return $min;
     }
@@ -101,7 +103,7 @@ class Sequence extends \Chart\Base
             }
         } while ($block = prev($this->aBlocks));
         if ($max < 0) {
-            throw new Exception('Maximal value not found', self::EXCEPTION_OUT_OF_RANGE);
+            throw new ChartException('Не удалось найти максимальное значение', self::EXCEPTION_OUT_OF_RANGE);
         }
         return $max;
     }

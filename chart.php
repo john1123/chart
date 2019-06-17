@@ -19,12 +19,14 @@ if (strlen($code) > 0) {
         }
     }
     $aData = $aClean;
-
-
-    $oMain = new \Chart\ThreeLinesBreak\Sequence($aData);
-    $aBlocks = $oMain->getBlocks();
-    $oDisplay = new \Chart\ThreeLinesBreak\Display($width, $height);
-    $oDisplay->setBlocks($aBlocks);
-    echo $oDisplay->getOutput();
+    try {
+        $oMain = new \Chart\ThreeLinesBreak\Sequence($aData);
+        $aBlocks = $oMain->getBlocks();
+        $oDisplay = new \Chart\ThreeLinesBreak\Display($width, $height);
+        $oDisplay->setBlocks($aBlocks);
+        echo $oDisplay->getOutput();
+    } catch (\Chart\ChartException $ex) {
+        echo "Ошибка: " . $ex->getMessage();
+    }
 }
 
