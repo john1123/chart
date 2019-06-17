@@ -8,7 +8,9 @@ $depth = \Helper\Arr::get($_GET, 'depth', 50);
 $fullText='';
 $aData = [];
 if (strlen($code) > 0) {
-    $oMoex = new \Exchange\Moex($code);
+    $oMoex = new \Exchange\Moex($code, [
+        "cacheDirectory" => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
+    ]);
     $aData = $oMoex->load($depth);
 
     // убираем все дни с нулевой ценой
@@ -28,6 +30,7 @@ if (strlen($code) > 0) {
 <head>
     <meta charset="UTF-8">
     <title><?= $fullText ?></title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/select2.min.css">
     <link rel="stylesheet" href="css/select2-bootstrap.min.css">

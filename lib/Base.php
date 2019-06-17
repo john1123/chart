@@ -4,7 +4,7 @@ abstract class Base
 {
     protected $aOptions;
 
-    public function __construct($ticker, array $aOptions=[])
+    public function __construct(array $aOptions=[])
     {
         $this->setOptions($aOptions);
     }
