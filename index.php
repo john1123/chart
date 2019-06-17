@@ -127,10 +127,21 @@ if (strlen($code) > 0) {
                         </thead>
                         <tbody>
                         <?php
-                        $aData = array_reverse($aData);
+                        $lastPrice = -1;
+                        $rows = [];
+                        $className = '';
                         foreach ($aData as $date => $price) {
-                            echo '<tr><td>' . date('d.m.Y', strtotime($date)) . '</td><td>' . $price . '</td></tr>';
+                            if ($lastPrice > 0) {
+                                if ($lastPrice < $price) {
+                                    $className = 'color-green';
+                                } elseif ($lastPrice > $price) {
+                                    $className = 'color-red';
+                                }
+                            }
+                            $rows[] = '<tr><td>' . date('d.m.Y', strtotime($date)) . '</td><td class="' . $className . '">' . $price . '</td></tr>';
+                            $lastPrice = $price;
                         }
+                        echo implode('', array_reverse($rows));
                         ?>
                         </tbody>
                     </table><?php } else { ?><div>Нет данных</div><?php }?>
