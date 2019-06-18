@@ -2,7 +2,7 @@
 
 require_once 'autoloader.php';
 
-$code = \Helper\Arr::get($_GET, 'code', '');
+$code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
 $depth = \Helper\Arr::get($_GET, 'depth', 50);
 
 $fullText='';
@@ -102,7 +102,7 @@ if (strlen($code) > 0) {
 </div><? endif; ?>
 <div class="container">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab_chart" data-toggle="tab">Главная</a></li>
+        <li class="active"><a href="#tab_chart" data-toggle="tab">График</a></li>
         <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
         <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li>
     </ul>
