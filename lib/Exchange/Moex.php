@@ -24,6 +24,10 @@ class Moex extends \Base
         parent::__construct($aOptions);
     }
 
+    public function getSMA($period) {
+        $arPrices = $this->load($period);
+        return array_sum($arPrices) / count($arPrices);
+    }
     public function load($depth) {
         $startValTime = strtotime(self::START_VALUES_DATE);
         $arResult = [];

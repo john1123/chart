@@ -103,6 +103,7 @@ if (strlen($code) > 0) {
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_chart" data-toggle="tab">График</a></li>
         <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
+        <li><a href="#tab_indicators" data-toggle="tab">Индикаторы</a></li>
         <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li>
     </ul>
 </div>
@@ -115,6 +116,19 @@ if (strlen($code) > 0) {
             <br/>
             <ul>
                 <li><a target="_blank" href="https://www.moex.com/ru/issue.aspx?code=<?= $code ?>"><?= $fullText ?> на сайте МосБиржи</a></li>
+            </ul>
+        </div>
+        <div class="container tab-pane fade" id="tab_indicators">
+            <h2>Скользящие средние</h2>
+            <ul>
+                <?php
+                $arSMA = [5,24,65];
+                $arRes = [];
+                foreach ($arSMA as $sma) {
+                    $arRes[$sma] = $oMoex->getSMA($sma);
+                }
+                asort($arRes);
+                foreach ($arRes as $key => $value) { ?><li>SMA(<?= $key . ') = ' . round($value, 4) ?></li><? } ?>
             </ul>
         </div>
         <div class="container tab-pane fade" id="tab_data">
