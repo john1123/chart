@@ -38,9 +38,8 @@ if (strlen($code) > 0) {
 </head>
 <body>
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
-        <!-- Марка и переключение сгруппированы для лучшего мобильного дисплея -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
@@ -49,7 +48,7 @@ if (strlen($code) > 0) {
                 <span class="icon-bar"></span>
             </button>
         </div>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse"  id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Избранное <span class="caret"></span></a>
@@ -72,7 +71,7 @@ if (strlen($code) > 0) {
             </ul>
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
-                <select id="input_code" name="code" data-placeholder="Select a state" class="form-control select2-single">
+                <select id="input_code" name="code" data-placeholder="Выберите акцию из списка" class="form-control select2-single">
 <?php foreach (Data::getData() as $aStock) echo '                    <option value="' . $aStock[3] . '"' . ($aStock[3] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[3] . '] ' . $aStock[1] . "</option>\n"; ?>
                 </select>
                 </div>
@@ -86,7 +85,7 @@ if (strlen($code) > 0) {
                 </div>
 
                 <button type="submit" class="btn btn-primary" id="input_submit">Показать</button>
-                <a href="/" class="btn btn-default">Очистить</a>
+                <a href="<?= $_SERVER["SCRIPT_NAME"] ?>" class="btn btn-default">Очистить</a>
             </form>
         </div>
     </div>
@@ -111,7 +110,7 @@ if (strlen($code) > 0) {
         <div class="tab-pane active fade in" id="tab_chart">
             <div id="chart_placeholder"></div>
         </div>
-        <div class=" container tab-pane fade" id="tab_url">
+        <div class="container tab-pane fade" id="tab_url">
             <br/>
             <br/>
             <ul>
