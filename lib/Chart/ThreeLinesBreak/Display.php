@@ -75,7 +75,7 @@ class Display extends \Chart\Base
         $style  = 'width:' . $blockWidth . 'px;height:' . $blockHeight . 'px;';
         $style .= 'left:' . $left . 'px;top:' . $top . 'px;';
 
-        $pricesOut = $withPrices ? '<div style="top:-10px">' . $block->getMaxPrice() . '</div><div style="top:' . ($blockHeight-13) . 'px">' . $block->getMinPrice() . '</div>' : '';
+        $pricesOut = $withPrices ? '<div style="top:-13px">' . $block->getMaxPrice() . '</div><div style="top:' . ($blockHeight-17) . 'px">' . $block->getMinPrice() . '</div>' : '';
         $out = '<div class="bar ' . $class . '" title="' . $title . '" style="' . $style . '">' . $pricesOut . '</div>';
         return $out;
     }
