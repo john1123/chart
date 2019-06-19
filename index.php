@@ -20,6 +20,9 @@ if (strlen($code) > 0) {
             $emptyDays++;
         }
     }
+    $aKeys = array_keys($aData);
+    $lastDate = array_pop($aKeys);
+    $lastPrice = $aData[$lastDate];
 
     $aActive = Data::searchData($code);
     $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
@@ -130,6 +133,8 @@ if (strlen($code) > 0) {
                 asort($arRes);
                 foreach ($arRes as $key => $value) { ?><li>SMA(<?= $key . ') = ' . round($value, 4) ?></li><? } ?>
             </ul>
+            <p>Цена закрытия торгуется <?= $lastPrice > $oMoex->getSMA(65) ? ' выше ' : ' ниже ' ?> скользящей средней SMA(65)
+            </p>
         </div>
         <div class="container tab-pane fade" id="tab_data">
             <div class="row">
