@@ -130,11 +130,11 @@ if (strlen($code) > 0) {
                 foreach ($arSMA as $sma) {
                     $arRes[$sma] = $oMoex->getSMA($sma);
                 }
-                asort($arRes);
-                foreach ($arRes as $key => $value) { ?><li>SMA(<?= $key . ') = ' . round($value, 4) ?></li><? } ?>
+                arsort($arRes);
+                foreach ($arRes as $key => $value) { ?><li>SMA(<?= $key . ') = ' . $value ?></li><? } ?>
             </ul>
-            <p>Цена закрытия торгуется <?= $lastPrice > $oMoex->getSMA(65) ? ' выше ' : ' ниже ' ?> скользящей средней SMA(65)
-            </p>
+            <p>Последняя цена: <b><?= $lastPrice ?></b><br/>
+            Торговый день закрылся <?= $lastPrice > $oMoex->getSMA(65) ? ' выше ' : ' ниже ' ?> скользящей средней SMA(65)</p>
         </div>
         <div class="container tab-pane fade" id="tab_data">
             <div class="row">
