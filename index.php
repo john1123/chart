@@ -9,7 +9,8 @@ $fullText='';
 $aData = [];
 if (strlen($code) > 0) {
     $oMoex = new \Exchange\Moex($code, [
-        "cacheDirectory" => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
+        'cacheDirectory' => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
+        'cacheRefresh' => \Helper\Arr::get($_GET, 'refresh', 'false'),
     ]);
     $aData = $oMoex->load($depth);
 
@@ -94,14 +95,14 @@ if (strlen($code) > 0) {
     </div>
 </nav>
 
-<?php if (strlen($code) > 1): ?>
+<?php if (strlen($code) > 1) { ?>
 
-<?php if ($emptyDays > 0) : ?><div class="container">
+<?php if ($emptyDays > 0) { ?><div class="container">
     <div class="alert alert-warning alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong>Внимание!</strong> В течение нескольких деней (<?= $emptyDays ?>) по инструменту не было сделок. Эти дни будут пропущены на графике.
     </div>
-</div><? endif; ?>
+</div><?php } ?>
 <div class="container">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_chart" data-toggle="tab">График</a></li>
@@ -119,22 +120,26 @@ if (strlen($code) > 0) {
             <br/>
             <ul>
                 <li><a target="_blank" href="https://www.moex.com/ru/issue.aspx?code=<?= $code ?>"><?= $fullText ?> на сайте МосБиржи</a></li>
+                <li><a target="_blank" href="https://ru.tradingview.com/symbols/MOEX-<?= strtoupper($code) ?>/">График <?= $code ?> на сайте tradingview.com</a></li>
+                <li><a target="_blank" href="https://investmint.ru/<?= strtolower($code) ?>/">Информация по дивидендам <?= $fullText ?> </a></li>
             </ul>
         </div>
         <div class="container tab-pane fade" id="tab_indicators">
             <h2>Скользящие средние</h2>
             <ul>
                 <?php
-                $arSMA = [5,24,65];
+                $arSMA = [20,65,100,140/*,280*/];
+                //$arSMA = [5,9,20,65];
                 $arRes = [];
                 foreach ($arSMA as $sma) {
                     $arRes[$sma] = $oMoex->getSMA($sma);
                 }
+                $arRes['last'] = $lastPrice;
                 arsort($arRes);
-                foreach ($arRes as $key => $value) { ?><li>SMA(<?= $key . ') = ' . $value ?></li><? } ?>
+                foreach ($arRes as $key => $value) { ?>
+                <li><?= (($key == 'last') ? '<b>Цена</b> = ' : 'SMA(' . $key . ') = ') . $value ?></li>
+                <? } ?>
             </ul>
-            <p>Последняя цена: <b><?= $lastPrice ?></b><br/>
-            Торговый день закрылся <?= $lastPrice > $oMoex->getSMA(65) ? ' выше ' : ' ниже ' ?> скользящей средней SMA(65)</p>
         </div>
         <div class="container tab-pane fade" id="tab_data">
             <div class="row">
@@ -172,7 +177,7 @@ if (strlen($code) > 0) {
         </div>
     </div>
 
-<?php endif; // Если переменная $code есть ?>
+<?php } // Если переменная $code есть ?>
 
 <!-- scripts -->
 <script src="https://cdn.jsdelivr.net/jquery/2.2.4/jquery.js"></script>
