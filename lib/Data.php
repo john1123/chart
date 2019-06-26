@@ -2,13 +2,12 @@
 
 class Data
 {
-    const IDX_TECH    = 0;
+    const IDX_SHORT   = 0;
     const IDX_FULL    = 1;
-    const IDX_SHORT   = 2;
-    const IDX_CODE    = 3;
-    const IDX_SUBTYPE = 4;
-    const IDX_LOT     = 5;
-    const IDX_ISIN    = 6;
+    const IDX_CODE    = 2;
+    const IDX_SUBTYPE = 3;
+    const IDX_LOT     = 4;
+    const IDX_ISIN    = 5;
 
     protected static $aData = [];
 

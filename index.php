@@ -35,7 +35,7 @@ if (strlen($code) > 0) {
     <meta charset="UTF-8">
     <title><?= $fullText ?></title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/select2.min.css">
     <link rel="stylesheet" href="css/select2-bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -76,7 +76,8 @@ if (strlen($code) > 0) {
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
                 <select id="input_code" name="code" data-placeholder="Выберите акцию из списка" class="form-control select2-single">
-<?php foreach (Data::getData() as $aStock) echo '                    <option value="' . $aStock[3] . '"' . ($aStock[3] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[3] . '] ' . $aStock[1] . "</option>\n"; ?>
+                    <option value=""></option>
+<?php foreach (Data::getData() as $aStock) echo '                    <option value="' . $aStock[Data::IDX_CODE] . '"' . ($aStock[Data::IDX_CODE] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[Data::IDX_CODE] . '] ' . $aStock[Data::IDX_FULL] . "</option>\n"; ?>
                 </select>
                 </div>
                 <div class="form-group">
@@ -138,7 +139,7 @@ if (strlen($code) > 0) {
                 arsort($arRes);
                 foreach ($arRes as $key => $value) { ?>
                 <li><?= (($key == 'last') ? '<b>Цена</b> = ' : 'SMA(' . $key . ') = ') . $value ?></li>
-                <? } ?>
+                <?php } ?>
             </ul>
         </div>
         <div class="container tab-pane fade" id="tab_data">
@@ -180,8 +181,8 @@ if (strlen($code) > 0) {
 <?php } // Если переменная $code есть ?>
 
 <!-- scripts -->
-<script src="https://cdn.jsdelivr.net/jquery/2.2.4/jquery.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
 <script src="js/select2.min.js"></script>
 <script>
