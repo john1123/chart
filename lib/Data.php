@@ -11,12 +11,13 @@ class Data
 
     protected static $aData = [];
 
-    public static function searchData($code, $column=self::IDX_CODE)
+    public static function searchText($needle, $columnNo=self::IDX_CODE)
     {
         self::getData();
         $record = [];
-        foreach (self::$aData as $record) {
-            if ($record[$column] == $code) {
+        foreach (self::$aData as $data) {
+            if ($data[$columnNo] == $needle) {
+                $record = $data;
                 break;
             }
         }

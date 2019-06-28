@@ -5,8 +5,20 @@ require_once 'autoloader.php';
 $code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
 $depth = \Helper\Arr::get($_GET, 'depth', 50);
 
+$messages = [];
+
 $fullText='';
 $aData = [];
+if (strlen($code) > 0) {
+    $isCodeValid = count(Data::searchText($code)) > 0;
+    if ($isCodeValid == false) {
+        $messages[] = [
+            'type'    => 'danger',
+            'message' => 'Код бумаги не найден'
+        ];
+        $code = '';
+    }
+}
 if (strlen($code) > 0) {
     $oMoex = new \Exchange\Moex($code, [
         'cacheDirectory' => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
@@ -25,8 +37,18 @@ if (strlen($code) > 0) {
     $lastDate = array_pop($aKeys);
     $lastPrice = $aData[$lastDate];
 
-    $aActive = Data::searchData($code);
+    $aActive = Data::searchText($code);
     $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
+    if ($emptyDays > 0) {
+        $messages[] = [
+            'type'    => 'warning',
+            'message' => '<strong>Внимание!</strong> В течение нескольких деней (' . $emptyDays . ') по инструменту не было сделок. Эти дни будут пропущены на графике.'
+        ];
+        $messages[] = [
+            'type'    => 'error',
+            'message' => '<strong>Внимание!</strong> В течение нескольких деней (' . $emptyDays . ') по инструменту не было сделок. Эти дни будут пропущены на графике.'
+        ];
+    }
 }
 
 ?><!DOCTYPE html>
@@ -35,6 +57,7 @@ if (strlen($code) > 0) {
     <meta charset="UTF-8">
     <title><?= $fullText ?></title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/select2.min.css">
     <link rel="stylesheet" href="css/select2-bootstrap.min.css">
@@ -96,22 +119,28 @@ if (strlen($code) > 0) {
     </div>
 </nav>
 
-<?php if (strlen($code) > 1) { ?>
-
-<?php if ($emptyDays > 0) { ?><div class="container">
-    <div class="alert alert-warning alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Внимание!</strong> В течение нескольких деней (<?= $emptyDays ?>) по инструменту не было сделок. Эти дни будут пропущены на графике.
-    </div>
-</div><?php } ?>
 <div class="container">
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab_chart" data-toggle="tab">График</a></li>
-        <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
-        <li><a href="#tab_indicators" data-toggle="tab">Индикаторы</a></li>
-        <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li>
-    </ul>
+<?php if (count($messages) > 0) {
+    foreach($messages as $msg) { ?>
+        <div class="alert alert-<?= $msg['type'] ?> alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <?= $msg['message'] ?>
+        </div>
+    <?php }
+} ?>
 </div>
+
+<?php if (strlen($code) > 0 ) { ?>
+
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_chart" data-toggle="tab">График</a></li>
+            <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
+            <li><a href="#tab_indicators" data-toggle="tab">Индикаторы</a></li>
+            <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li>
+        </ul>
+    </div>
+
     <div class="tab-content">
         <div class="tab-pane active fade in" id="tab_chart">
             <div id="chart_placeholder"></div>
@@ -129,8 +158,8 @@ if (strlen($code) > 0) {
             <h2>Скользящие средние</h2>
             <ul>
                 <?php
-                $arSMA = [20,65,100,140/*,280*/];
-                //$arSMA = [5,9,20,65];
+                //$arSMA = [20,65,100,140/*,280*/];
+                $arSMA = [5,9,20,65];
                 $arRes = [];
                 foreach ($arSMA as $sma) {
                     $arRes[$sma] = $oMoex->getSMA($sma);
@@ -178,7 +207,7 @@ if (strlen($code) > 0) {
         </div>
     </div>
 
-<?php } // Если переменная $code есть ?>
+<?php } ?>
 
 <!-- scripts -->
 <script src="js/jquery.min.js"></script>

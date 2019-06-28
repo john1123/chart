@@ -8,6 +8,9 @@ class Arr
 
     public static function get($array, $key, $default = null)
     {
+        if (!is_array($array)) {
+            return $default;
+        }
         if (strpos($key, self::ARRAY_DELIMITER) !== false) {
             return self::get_multidimensional($array, $key, $default);
         }

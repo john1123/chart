@@ -32,7 +32,7 @@ class Sequence extends \Chart\Base
     protected function generateBlocks()
     {
         if (!is_array($this->aData) || count($this->aData) < 1) {
-            throw new ChartException('Данных об биржи не получено');
+            throw new ChartException('Данных от биржи не получено');
         }
         $this->aBlocks = [];
         $idx = 0;
