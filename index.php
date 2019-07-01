@@ -118,7 +118,24 @@ if (strlen($code) > 0) {
         </div>
     </div>
 </nav>
-
+<?php if (strlen($code) == 0 ) { ?>
+<div class="container">
+    <div class="row">
+        <form>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Данные для графика</label>
+                <textarea name="" id="exampleInputEmail1" class="form-control" rows="10" placeholder="Ожидается таблица 'Дата - Цена', либо только 'Цена'"></textarea>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" checked="checked"> Самые "новые" значения наверху
+                </label>
+            </div>
+            <button type="submit" class="btn btn-default btn-primary">Построить график</button>
+        </form>
+    </div>
+</div>
+<?php } ?>
 <div class="container">
 <?php if (count($messages) > 0) {
     foreach($messages as $msg) { ?>
