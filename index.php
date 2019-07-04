@@ -2,15 +2,13 @@
 
 require_once 'autoloader.php';
 
-$code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
-$depth = \Helper\Arr::get($_GET, 'depth', 50);
-
-$messages = [];
-
 $fullText='';
+$messages = [];
 $aData = [];
+
+$code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
 if (strlen($code) > 0) {
-    $isCodeValid = count(Data::searchText($code)) > 0;
+    $isCodeValid = count(Data::searchByText($code)) > 0;
     if ($isCodeValid == false) {
         $messages[] = [
             'type'    => 'danger',
@@ -19,32 +17,57 @@ if (strlen($code) > 0) {
         $code = '';
     }
 }
-if (strlen($code) > 0) {
-    $oMoex = new \Exchange\Moex($code, [
-        'cacheDirectory' => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
-        'cacheRefresh' => \Helper\Arr::get($_GET, 'refresh', 'false'),
-    ]);
-    $aData = $oMoex->load($depth);
 
-    // убираем все дни с нулевой ценой
-    $emptyDays = 0;
-    foreach ($aData as $date => $price) {
-        if ($price > 0) {} else {
-            $emptyDays++;
+$strRaw = \Helper\Arr::get($_POST, 'data', '');
+if (strlen($strRaw) > 0) {
+    $isReverse = \Helper\Arr::get($_POST, 'reverse', 'false');
+    $aData = [];
+    $aRawData = explode(PHP_EOL, $strRaw);
+    foreach ($aRawData as $sLine) {
+        $aParts =  preg_split("/[\s]+/", $sLine);
+        if (count($aParts) > 1) {
+            $aData[$aParts[0]] = $aParts[1];
+        } else {
+            $aData[] = $aParts[0];
         }
     }
+    if ($isReverse == 'true') {
+        $aData = array_reverse($aData);
+    }
+    $depth = count($aData);
+} else {
+    $depth = \Helper\Arr::get($_GET, 'depth', 50);
+    if (strlen($code) > 0) {
+        $aActive = Data::searchByText($code);
+        $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
+
+        $oMoex = new \Exchange\Moex($code, [
+            'cacheDirectory' => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
+            'cacheRefresh' => \Helper\Arr::get($_GET, 'refresh', 'false'),
+        ]);
+        $aData = $oMoex->load($depth);
+
+        // убираем все дни с нулевой ценой
+        $emptyDays = 0;
+        foreach ($aData as $date => $price) {
+            if ($price > 0) {} else {
+                $emptyDays++;
+            }
+        }
+        if ($emptyDays > 0) {
+            $messages[] = [
+                'type'    => 'warning',
+                'message' => '<strong>Внимание!</strong> В течение нескольких деней (' . $emptyDays . ') по инструменту не было сделок. Эти дни будут пропущены на графике.'
+            ];
+        }
+    }
+}
+
+if (count($aData) > 0) {
+    // Получаем последнюю дату и последнюю цену
     $aKeys = array_keys($aData);
     $lastDate = array_pop($aKeys);
     $lastPrice = $aData[$lastDate];
-
-    $aActive = Data::searchText($code);
-    $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
-    if ($emptyDays > 0) {
-        $messages[] = [
-            'type'    => 'warning',
-            'message' => '<strong>Внимание!</strong> В течение нескольких деней (' . $emptyDays . ') по инструменту не было сделок. Эти дни будут пропущены на графике.'
-        ];
-    }
 }
 
 ?><!DOCTYPE html>
@@ -114,7 +137,19 @@ if (strlen($code) > 0) {
         </div>
     </div>
 </nav>
-<?php if (strlen($code) == 0 ) { ?>
+
+<div class="container">
+    <?php if (count($messages) > 0) {
+        foreach($messages as $msg) { ?>
+            <div class="alert alert-<?= $msg['type'] ?> alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <?= $msg['message'] ?>
+            </div>
+        <?php }
+    } ?>
+</div>
+
+<?php if (strlen($code) == 0 && count($aData) < 1 ) { ?>
 <div class="container">
     <div class="row">
         <div class="row">
@@ -126,7 +161,7 @@ if (strlen($code) > 0) {
                     </div>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" checked="checked"> Самые "новые" значения наверху
+                            <input type="checkbox" name="reverse" value="true" checked="checked"> Самые "новые" значения наверху
                         </label>
                     </div>
                     <button type="submit" class="btn btn-default btn-primary">Построить график</button>
@@ -149,18 +184,8 @@ if (strlen($code) > 0) {
     </div>
 </div>
 <?php } ?>
-<div class="container">
-<?php if (count($messages) > 0) {
-    foreach($messages as $msg) { ?>
-        <div class="alert alert-<?= $msg['type'] ?> alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <?= $msg['message'] ?>
-        </div>
-    <?php }
-} ?>
-</div>
 
-<?php if (strlen($code) > 0 ) { ?>
+<?php if (count($aData) > 0 ) { ?>
 
     <div class="container">
         <ul class="nav nav-tabs">
