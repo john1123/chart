@@ -94,7 +94,7 @@ if (strlen($code) > 0) {
             </ul>
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
-                <select id="input_code" name="code" data-placeholder="Выберите акцию из списка" class="form-control select2-single">
+                <select id="input_code" name="code" data-placeholder="Тикер или название акции" class="form-control select2-single">
                     <option value=""></option>
 <?php foreach (Data::getData() as $aStock) echo '                    <option value="' . $aStock[Data::IDX_CODE] . '"' . ($aStock[Data::IDX_CODE] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[Data::IDX_CODE] . '] ' . $aStock[Data::IDX_FULL] . "</option>\n"; ?>
                 </select>
