@@ -44,10 +44,6 @@ if (strlen($code) > 0) {
             'type'    => 'warning',
             'message' => '<strong>Внимание!</strong> В течение нескольких деней (' . $emptyDays . ') по инструменту не было сделок. Эти дни будут пропущены на графике.'
         ];
-        $messages[] = [
-            'type'    => 'error',
-            'message' => '<strong>Внимание!</strong> В течение нескольких деней (' . $emptyDays . ') по инструменту не было сделок. Эти дни будут пропущены на графике.'
-        ];
     }
 }
 
@@ -118,24 +114,7 @@ if (strlen($code) > 0) {
         </div>
     </div>
 </nav>
-<?php if (strlen($code) == 0 ) { ?>
-<div class="container">
-    <div class="row">
-        <form>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Данные для графика</label>
-                <textarea name="" id="exampleInputEmail1" class="form-control" rows="10" placeholder="Ожидается таблица 'Дата - Цена', либо только 'Цена'"></textarea>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" checked="checked"> Самые "новые" значения наверху
-                </label>
-            </div>
-            <button type="submit" class="btn btn-default btn-primary">Построить график</button>
-        </form>
-    </div>
-</div>
-<?php } ?>
+
 <div class="container">
 <?php if (count($messages) > 0) {
     foreach($messages as $msg) { ?>
@@ -163,12 +142,13 @@ if (strlen($code) > 0) {
             <div id="chart_placeholder"></div>
         </div>
         <div class="container tab-pane fade" id="tab_url">
-            <br/>
-            <br/>
+            <h2><?= $fullText ?></h2>
             <ul>
-                <li><a target="_blank" href="https://www.moex.com/ru/issue.aspx?code=<?= $code ?>"><?= $fullText ?> на сайте МосБиржи</a></li>
-                <li><a target="_blank" href="https://ru.tradingview.com/symbols/MOEX-<?= strtoupper($code) ?>/">График <?= $code ?> на сайте tradingview.com</a></li>
-                <li><a target="_blank" href="https://investmint.ru/<?= strtolower($code) ?>/">Информация по дивидендам <?= $fullText ?> </a></li>
+                <li><a target="_blank" href="https://www.moex.com/ru/issue.aspx?code=<?= $code ?>">Инструмент на сайте МосБиржи</a></li>
+                <li><a target="_blank" href="https://ru.tradingview.com/symbols/MOEX-<?= strtoupper($code) ?>">Инструмент на сайте tradingview.com</a></li>
+                <li><a target="_blank" href="https://ru.tradingview.com/chart/?symbol=MOEX:<?= strtoupper($code) ?>">График  на сайте tradingview.com</a></li>
+                <li><a target="_blank" href="https://www.dohod.ru/ik/analytics/dividend/<?= strtolower($code) ?>/">Информация по дивидендам  (dohod.ru)</a></li>
+                <li><a target="_blank" href="https://investmint.ru/<?= strtolower($code) ?>/">Информация по дивидендам (investmint.ru)</a></li>
             </ul>
         </div>
         <div class="container tab-pane fade" id="tab_indicators">
@@ -209,6 +189,8 @@ if (strlen($code) > 0) {
                                     $className = 'color-green';
                                 } elseif ($lastPrice > $price) {
                                     $className = 'color-red';
+                                } else {
+                                    $className = '';
                                 }
                             }
                             $rows[] = '<tr><td>' . date('d.m.Y', strtotime($date)) . '</td><td class="' . $className . '">' . $price . '</td></tr>';
