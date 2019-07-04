@@ -198,7 +198,17 @@ if (count($aData) > 0) {
 
     <div class="tab-content">
         <div class="tab-pane active fade in" id="tab_chart">
-            <div id="chart_placeholder"></div>
+            <div class="container">
+                <?php try {
+                    $oMain = new \Chart\ThreeLinesBreak\Sequence($aData);
+                    $aBlocks = $oMain->getBlocks();
+                    $oDisplay = new \Chart\ThreeLinesBreak\Display(800,300);
+                    $oDisplay->setBlocks($aBlocks);
+                    echo $oDisplay->getOutput();
+                } catch (\Chart\ChartException $ex) {
+                    echo "Ошибка: " . $ex->getMessage();
+                } ?>
+            </div>
         </div>
         <div class="container tab-pane fade" id="tab_url">
             <h2><?= $fullText ?></h2>
