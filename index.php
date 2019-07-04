@@ -114,7 +114,41 @@ if (strlen($code) > 0) {
         </div>
     </div>
 </nav>
-
+<?php if (strlen($code) == 0 ) { ?>
+<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="col-sm-8">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="input_table">Данные для графика</label>
+                        <textarea name="data" id="input_table" class="form-control" rows="10" placeholder=""></textarea>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" checked="checked"> Самые "новые" значения наверху
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-default btn-primary">Построить график</button>
+                </form>
+            </div>
+            <div class="col-sm-4">
+                Ожидается либо две колонки "Дата - Цена" разделённые пробелом, либо только колонка "Цена" в столбик (по одному значению в строке).
+                И дата и цена не должны содержать в себе пробелов или символов табуляции.
+                <h4>Пример данных</h4>
+                <pre><?php
+                    $str  = date('d.m.Y', time() + 86400)     . " 1.03\n";
+                    $str .= date('d.m.Y', time())             . " 1.02\n";
+                    $str .= date('d.m.Y', time() - 86400)     . " 1.01\n";
+                    $str .= date('d.m.Y', time() - 86400 * 2) . " 1\n";
+                    $str .= date('d.m.Y', time() - 86400 * 3) . " 0.99\n";
+                    echo $str;
+                ?></pre>
+            </div>
+        </div>
+    </div>
+</div>
+<?php } ?>
 <div class="container">
 <?php if (count($messages) > 0) {
     foreach($messages as $msg) { ?>
