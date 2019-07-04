@@ -25,9 +25,8 @@ class Display extends \Chart\Base
     {
         $blockWidth = round($this->divWidth / count($this->aBlocks));
         $out =  '<div class="chart" style="width:' . $this->divWidth . 'px;height:' . $this->divHeight . 'px">';
-        foreach ($this->aBlocks as $block) {
-            $withPrices = count($this->aBlocks) > 30 ? false : true;
-            $out .= $this->getBlock($block, $blockWidth, $withPrices);
+        foreach ($this->aBlocks as $key => $block) {
+            $out .= $this->getBlock($block, $blockWidth, ($key == 0));
         }
         $out .= '</div>';
         $out .= '<div style="height:' . $this->divHeight . 'px;"></div>' . "\n";
@@ -36,7 +35,7 @@ class Display extends \Chart\Base
 
     protected $cntr = 0;
 
-    protected function getBlock($block, $blockWidth, $withPrices=true)
+    protected function getBlock($block, $blockWidth, $isFirstBlock=false)
     {
         /** @var Block $block */
 
@@ -71,11 +70,20 @@ class Display extends \Chart\Base
 //            $title .= $block->getOpenDate() . ': ' . $block->getOpenPrice();
 //        }
 
-        $blockHeight = !$withPrices && $blockHeight < 1 ? 1 : $blockHeight;
+        // Блок высотой меньше 1 пикселя отображаем выстотой в 1 пиксель
+        $blockHeight = $blockHeight < 1 ? 1 : $blockHeight;
         $style  = 'width:' . $blockWidth . 'px;height:' . $blockHeight . 'px;';
         $style .= 'left:' . $left . 'px;top:' . $top . 'px;';
 
-        $pricesOut = $withPrices ? '<div style="top:-13px">' . $block->getMaxPrice() . '</div><div style="top:' . ($blockHeight-17) . 'px">' . $block->getMinPrice() . '</div>' : '';
+        $pricesOut = '';
+        if ($isFirstBlock || $class == 'green') {
+            $pricesOut .= '<div style="position:relative;top:-12px">' . $block->getMaxPrice() . '</div>';
+
+        }
+        if ($isFirstBlock || $class == 'red') {
+            $top = $isFirstBlock ? $blockHeight-17 : $blockHeight-3;
+            $pricesOut .= '<div style="position:relative;top:' . $top . 'px">' . $block->getMinPrice() . '</div>';
+        }
         $out = '<div class="bar ' . $class . '" title="' . $title . '" style="' . $style . '">' . $pricesOut . '</div>';
         return $out;
     }
