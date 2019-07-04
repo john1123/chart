@@ -4,6 +4,9 @@ require_once 'autoloader.php';
 
 $code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
 $depth = \Helper\Arr::get($_GET, 'depth', 50);
+if ($depth > 150) {
+    $depth = 100;
+}
 
 $messages = [];
 
