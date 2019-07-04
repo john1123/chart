@@ -26,15 +26,33 @@ if (strlen($strRaw) > 0) {
     foreach ($aRawData as $sLine) {
         $aParts =  preg_split("/[\s]+/", $sLine);
         if (count($aParts) > 1) {
-            $aData[$aParts[0]] = $aParts[1];
+            $price = floatval($aParts[1]);
+            if ($price > 0) {
+                $aData[$aParts[0]] = $price;
+            }
         } else {
-            $aData[] = $aParts[0];
+            $price = floatval($aParts[0]);
+            if ($price > 0) {
+                $aData[] = $price;
+            }
         }
     }
     if ($isReverse == 'true') {
         $aData = array_reverse($aData);
     }
     $depth = count($aData);
+    if ($depth < 1) {
+        $messages[] = [
+            'type'    => 'danger',
+            'message' => '<strong>Не могу построить график!</strong> Данные не распознаны.'
+        ];
+    } elseif ($depth < 2) {
+        $messages[] = [
+            'type'    => 'warning',
+            'message' => '<strong>Не могу построить график!</strong> Нельзя простроить график всего с одной ценой.'
+        ];
+        $aData = [];
+    }
 } else {
     $depth = \Helper\Arr::get($_GET, 'depth', 50);
     if (strlen($code) > 0) {
@@ -52,6 +70,7 @@ if (strlen($strRaw) > 0) {
         foreach ($aData as $date => $price) {
             if ($price > 0) {} else {
                 $emptyDays++;
+                unset($aData[$date]);
             }
         }
         if ($emptyDays > 0) {
@@ -138,48 +157,44 @@ if (count($aData) > 0) {
     </div>
 </nav>
 
+<?php if (count($messages) > 0) { ?>
 <div class="container">
-    <?php if (count($messages) > 0) {
-        foreach($messages as $msg) { ?>
-            <div class="alert alert-<?= $msg['type'] ?> alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <?= $msg['message'] ?>
-            </div>
-        <?php }
-    } ?>
+    <?php foreach($messages as $msg) { ?><div class="alert alert-<?= $msg['type'] ?> alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <?= $msg['message'] ?>
+    </div><?php } ?>
 </div>
+<?php } ?>
 
 <?php if (strlen($code) == 0 && count($aData) < 1 ) { ?>
 <div class="container">
     <div class="row">
-        <div class="row">
-            <div class="col-sm-8">
-                <form method="post">
-                    <div class="form-group">
-                        <label for="input_table">Данные для графика</label>
-                        <textarea name="data" id="input_table" class="form-control" rows="10" placeholder=""></textarea>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" name="reverse" value="true" checked="checked"> Самые "новые" значения наверху
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-default btn-primary">Построить график</button>
-                </form>
-            </div>
-            <div class="col-sm-4">
-                Ожидается либо две колонки "Дата - Цена" разделённые пробелом, либо только колонка "Цена" в столбик (по одному значению в строке).
-                И дата и цена не должны содержать в себе пробелов или символов табуляции.
-                <h4>Пример данных</h4>
-                <pre><?php
-                    $str  = date('d.m.Y', time() + 86400)     . " 1.03\n";
-                    $str .= date('d.m.Y', time())             . " 1.02\n";
-                    $str .= date('d.m.Y', time() - 86400)     . " 1.01\n";
-                    $str .= date('d.m.Y', time() - 86400 * 2) . " 1\n";
-                    $str .= date('d.m.Y', time() - 86400 * 3) . " 0.99\n";
-                    echo $str;
-                ?></pre>
-            </div>
+        <div class="col-sm-8">
+            <form method="post">
+                <div class="form-group">
+                    <label for="input_table">Данные для графика</label>
+                    <textarea name="data" id="input_table" class="form-control" rows="10" placeholder=""><?= \Helper\Arr::get($_POST, 'data', '') ?></textarea>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="reverse" value="true"<?= \Helper\Arr::get($_POST, 'reverse', '') == 'true' ? ' checked="checked"' : '' ?>> Самые "новые" значения наверху
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default btn-primary">Построить график</button>
+            </form>
+        </div>
+        <div class="col-sm-4">
+            Ожидается либо две колонки "Дата - Цена" разделённые пробелом, либо только колонка "Цена" в столбик (по одному значению в строке).
+            И дата и цена не должны содержать в себе пробелов или символов табуляции.
+            <h4>Пример данных</h4>
+            <pre><?php
+                $str  = date('d.m.Y', time() + 86400)     . " 1.03\n";
+                $str .= date('d.m.Y', time())             . " 1.02\n";
+                $str .= date('d.m.Y', time() - 86400)     . " 1.01\n";
+                $str .= date('d.m.Y', time() - 86400 * 2) . " 1\n";
+                $str .= date('d.m.Y', time() - 86400 * 3) . " 0.99\n";
+                echo $str;
+            ?></pre>
         </div>
     </div>
 </div>
@@ -191,8 +206,8 @@ if (count($aData) > 0) {
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab_chart" data-toggle="tab">График</a></li>
             <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
-            <li><a href="#tab_indicators" data-toggle="tab">Индикаторы</a></li>
-            <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li>
+            <?php if (strlen($code) > 0) { ?><li><a href="#tab_indicators" data-toggle="tab">Индикаторы</a></li>
+            <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li><?php } ?>
         </ul>
     </div>
 
@@ -228,7 +243,7 @@ if (count($aData) > 0) {
                 $arSMA = [5,9,20,65];
                 $arRes = [];
                 foreach ($arSMA as $sma) {
-                    $arRes[$sma] = $oMoex->getSMA($sma);
+                    $arRes[$sma] = $oMoex instanceof \Exchange\Moex ? $oMoex->getSMA($sma) : '';;
                 }
                 $arRes['last'] = $lastPrice;
                 arsort($arRes);
@@ -262,7 +277,8 @@ if (count($aData) > 0) {
                                     $className = '';
                                 }
                             }
-                            $rows[] = '<tr><td>' . date('d.m.Y', strtotime($date)) . '</td><td class="' . $className . '">' . $price . '</td></tr>';
+                            $sDate =is_string($date) ? date('d.m.Y', strtotime($date)) : '';
+                            $rows[] = '<tr><td>' . $sDate . '</td><td class="' . $className . '">' . $price . '</td></tr>';
                             $lastPrice = $price;
                         }
                         echo implode('', array_reverse($rows));
