@@ -11,7 +11,7 @@ class Data
 
     protected static $aData = [];
 
-    public static function searchText($needle, $columnNo=self::IDX_CODE)
+    public static function searchByText($needle, $columnNo=self::IDX_CODE)
     {
         self::getData();
         $record = [];

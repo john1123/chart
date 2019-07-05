@@ -2,18 +2,13 @@
 
 require_once 'autoloader.php';
 
-$code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
-$depth = \Helper\Arr::get($_GET, 'depth', 50);
-if ($depth > 150) {
-    $depth = 100;
-}
-
-$messages = [];
-
 $fullText='';
+$messages = [];
 $aData = [];
+
+$code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
 if (strlen($code) > 0) {
-    $isCodeValid = count(Data::searchText($code)) > 0;
+    $isCodeValid = count(Data::searchByText($code)) > 0;
     if ($isCodeValid == false) {
         $messages[] = [
             'type'    => 'danger',
@@ -22,32 +17,79 @@ if (strlen($code) > 0) {
         $code = '';
     }
 }
-if (strlen($code) > 0) {
-    $oMoex = new \Exchange\Moex($code, [
-        'cacheDirectory' => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
-        'cacheRefresh' => \Helper\Arr::get($_GET, 'refresh', 'false'),
-    ]);
-    $aData = $oMoex->load($depth);
 
-    // убираем все дни с нулевой ценой
-    $emptyDays = 0;
-    foreach ($aData as $date => $price) {
-        if ($price > 0) {} else {
-            $emptyDays++;
+$strRaw = \Helper\Arr::get($_POST, 'data', '');
+if (strlen($strRaw) > 0) {
+    $isReverse = \Helper\Arr::get($_POST, 'reverse', 'false');
+    $aData = [];
+    $aRawData = explode(PHP_EOL, $strRaw);
+    foreach ($aRawData as $sLine) {
+        $aParts =  preg_split("/[\s]+/", $sLine);
+        if (count($aParts) > 1) {
+            $price = floatval($aParts[1]);
+            if ($price > 0) {
+                $aData[$aParts[0]] = $price;
+            }
+        } else {
+            $price = floatval($aParts[0]);
+            if ($price > 0) {
+                $aData[] = $price;
+            }
         }
     }
+    if ($isReverse == 'true') {
+        $aData = array_reverse($aData);
+    }
+    $depth = count($aData);
+    if ($depth < 1) {
+        $messages[] = [
+            'type'    => 'danger',
+            'message' => '<strong>Не могу построить график!</strong> Данные не распознаны.'
+        ];
+    } elseif ($depth < 2) {
+        $messages[] = [
+            'type'    => 'warning',
+            'message' => '<strong>Не могу построить график!</strong> Нельзя простроить график всего с одной ценой.'
+        ];
+        $aData = [];
+    }
+} else {
+    $depth = \Helper\Arr::get($_GET, 'depth', 50);
+if ($depth > 150) {
+    $depth = 100;
+}
+    if (strlen($code) > 0) {
+        $aActive = Data::searchByText($code);
+        $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
+
+        $oMoex = new \Exchange\Moex($code, [
+            'cacheDirectory' => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
+            'cacheRefresh' => \Helper\Arr::get($_GET, 'refresh', 'false'),
+        ]);
+        $aData = $oMoex->load($depth);
+
+        // убираем все дни с нулевой ценой
+        $emptyDays = 0;
+        foreach ($aData as $date => $price) {
+            if ($price > 0) {} else {
+                $emptyDays++;
+                unset($aData[$date]);
+            }
+        }
+        if ($emptyDays > 0) {
+            $messages[] = [
+                'type'    => 'warning',
+                'message' => '<strong>Внимание!</strong> В течение нескольких деней (' . $emptyDays . ') по инструменту не было сделок. Эти дни будут пропущены на графике.'
+            ];
+        }
+    }
+}
+
+if (count($aData) > 0) {
+    // Получаем последнюю дату и последнюю цену
     $aKeys = array_keys($aData);
     $lastDate = array_pop($aKeys);
     $lastPrice = $aData[$lastDate];
-
-    $aActive = Data::searchText($code);
-    $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
-    if ($emptyDays > 0) {
-        $messages[] = [
-            'type'    => 'warning',
-            'message' => '<strong>Внимание!</strong> В течение нескольких деней (' . $emptyDays . ') по инструменту не было сделок. Эти дни будут пропущены на графике.'
-        ];
-    }
 }
 
 ?><!DOCTYPE html>
@@ -118,25 +160,57 @@ if (strlen($code) > 0) {
     </div>
 </nav>
 
+<?php if (count($messages) > 0) { ?>
 <div class="container">
-<?php if (count($messages) > 0) {
-    foreach($messages as $msg) { ?>
-        <div class="alert alert-<?= $msg['type'] ?> alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <?= $msg['message'] ?>
-        </div>
-    <?php }
-} ?>
+    <?php foreach($messages as $msg) { ?><div class="alert alert-<?= $msg['type'] ?> alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <?= $msg['message'] ?>
+    </div><?php } ?>
 </div>
+<?php } ?>
 
-<?php if (strlen($code) > 0 ) { ?>
+<?php if (strlen($code) == 0 && count($aData) < 1 ) { ?>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <form method="post">
+                <div class="form-group">
+                    <label for="input_table">Данные для графика</label>
+                    <textarea name="data" id="input_table" class="form-control" rows="10" placeholder=""><?= \Helper\Arr::get($_POST, 'data', '') ?></textarea>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="reverse" value="true"<?= \Helper\Arr::get($_POST, 'reverse', '') == 'true' ? ' checked="checked"' : '' ?>> Самые "новые" значения вверху таблицы
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-default btn-primary">Построить график</button>
+            </form>
+        </div>
+        <div class="col-sm-4">
+            Ожидается либо две колонки "Дата - Цена" разделённые пробелом, либо только колонка "Цена" в столбик (по одному значению в строке).
+            И дата и цена не должны содержать в себе пробелов или символов табуляции.
+            <h4>Пример данных</h4>
+            <pre><?php
+                $str  = date('d.m.Y', time() + 86400)     . " 1.03\n";
+                $str .= date('d.m.Y', time())             . " 1.02\n";
+                $str .= date('d.m.Y', time() - 86400)     . " 1.01\n";
+                $str .= date('d.m.Y', time() - 86400 * 2) . " 1\n";
+                $str .= date('d.m.Y', time() - 86400 * 3) . " 0.99\n";
+                echo $str;
+            ?></pre>
+        </div>
+    </div>
+</div>
+<?php } ?>
+
+<?php if (count($aData) > 0 ) { ?>
 
     <div class="container">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab_chart" data-toggle="tab">График</a></li>
             <li><a href="#tab_data" data-toggle="tab">Данные</a></li>
-            <li><a href="#tab_indicators" data-toggle="tab">Индикаторы</a></li>
-            <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li>
+            <?php if (strlen($code) > 0) { ?><li><a href="#tab_indicators" data-toggle="tab">Индикаторы</a></li>
+            <li><a href="#tab_url" data-toggle="tab">Ссылки</a></li><?php } ?>
         </ul>
     </div>
 
@@ -162,7 +236,7 @@ if (strlen($code) > 0) {
                 $arSMA = [5,9,20,65];
                 $arRes = [];
                 foreach ($arSMA as $sma) {
-                    $arRes[$sma] = $oMoex->getSMA($sma);
+                    $arRes[$sma] = $oMoex instanceof \Exchange\Moex ? $oMoex->getSMA($sma) : '';;
                 }
                 $arRes['last'] = $lastPrice;
                 arsort($arRes);
@@ -196,7 +270,8 @@ if (strlen($code) > 0) {
                                     $className = '';
                                 }
                             }
-                            $rows[] = '<tr><td>' . date('d.m.Y', strtotime($date)) . '</td><td class="' . $className . '">' . $price . '</td></tr>';
+                            $sDate =is_string($date) ? date('d.m.Y', strtotime($date)) : '';
+                            $rows[] = '<tr><td>' . $sDate . '</td><td class="' . $className . '">' . $price . '</td></tr>';
                             $lastPrice = $price;
                         }
                         echo implode('', array_reverse($rows));
@@ -217,8 +292,7 @@ if (strlen($code) > 0) {
 <script src="js/jquery.autocomplete.js"></script>
 <script src="js/select2.min.js"></script>
 <script>
-    var code = "<?= $code ?>";
-    var depth = <?= $depth ?>;
+    var data = <?= json_encode($aData) ?>;
 </script>
 <script src="js/scripts.js"></script>
 </body>

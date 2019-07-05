@@ -119,7 +119,7 @@ class Display extends \Chart\Base
         $diff = $seqMax - $seqMin;
         $delta = $diff / $this->divHeight;
 
-        return ($price - $seqMin) / $delta;
+        return $delta == 0 ? 0 : ($price - $seqMin) / $delta;
     }
 
     static function niceDifference($date1, $date2, $format = 'd.m.Y')
