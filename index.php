@@ -177,7 +177,7 @@ if (count($aData) > 0) {
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="reverse" value="true"<?= \Helper\Arr::get($_POST, 'reverse', '') == 'true' ? ' checked="checked"' : '' ?>> Самые "новые" значения наверху
+                        <input type="checkbox" name="reverse" value="true"<?= \Helper\Arr::get($_POST, 'reverse', '') == 'true' ? ' checked="checked"' : '' ?>> Самые "новые" значения вверху таблицы
                     </label>
                 </div>
                 <button type="submit" class="btn btn-default btn-primary">Построить график</button>
@@ -213,17 +213,7 @@ if (count($aData) > 0) {
 
     <div class="tab-content">
         <div class="tab-pane active fade in" id="tab_chart">
-            <div class="container">
-                <?php try {
-                    $oMain = new \Chart\ThreeLinesBreak\Sequence($aData);
-                    $aBlocks = $oMain->getBlocks();
-                    $oDisplay = new \Chart\ThreeLinesBreak\Display(800,300);
-                    $oDisplay->setBlocks($aBlocks);
-                    echo $oDisplay->getOutput();
-                } catch (\Chart\ChartException $ex) {
-                    echo "Ошибка: " . $ex->getMessage();
-                } ?>
-            </div>
+            <div id="chart_placeholder"></div>
         </div>
         <div class="container tab-pane fade" id="tab_url">
             <h2><?= $fullText ?></h2>
@@ -299,8 +289,7 @@ if (count($aData) > 0) {
 <script src="js/jquery.autocomplete.js"></script>
 <script src="js/select2.min.js"></script>
 <script>
-    var code = "<?= $code ?>";
-    var depth = <?= $depth ?>;
+    var data = <?= json_encode($aData) ?>;
 </script>
 <script src="js/scripts.js"></script>
 </body>
