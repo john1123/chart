@@ -2,6 +2,8 @@
 
 namespace Chart\ThreeLinesBreak;
 
+use Chart\ChartException;
+
 class Display extends \Chart\Base
 {
     protected $divWidth;
@@ -97,7 +99,7 @@ class Display extends \Chart\Base
             }
             return $min;
         }
-        throw new Exception('Empty blocks list');
+        throw new ChartException('Empty blocks list');
     }
     protected function getMax()
     {
@@ -108,7 +110,7 @@ class Display extends \Chart\Base
             }
             return $max;
         }
-        throw new Exception('Empty blocks list');
+        throw new ChartException('Empty blocks list');
     }
 
     function translateCoordinate($price)
