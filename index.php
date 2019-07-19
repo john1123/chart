@@ -171,6 +171,7 @@ if (count($aData) > 0) {
 
 <?php if (strlen($code) == 0 && count($aData) < 1 ) { ?>
 <div class="container">
+    <h2>Выбрать акцию выше или ввести данные для графика вручную</h2><br/>
     <div class="row">
         <div class="col-sm-8">
             <form method="post">
