@@ -19,13 +19,12 @@ class File extends \Base implements ICache
         }
         $result = $default;
         if (file_exists($fileName)) {
-            $fileDate = date('Y-m-d H:i:s', filectime($filename));
-            $currDate = date('Y-m-d 20:00:00');
-            if ($fileDate < $currDate) {
-                @unlink($fileName);
-            }
-
             $result = file_get_contents($fileName);
+//            $fileDate = date('Y-m-d H:i:s', filectime($fileName));
+//            $currDate = date('Y-m-d 20:00:00');
+//            if ($fileDate < $currDate) {
+//                @unlink($fileName);
+//            }
         }
         return $result;
     }
