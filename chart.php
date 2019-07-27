@@ -12,7 +12,10 @@ if (count($aData) > 0) {
         $aBlocks = $oMain->getBlocks();
         $oDisplay = new \Chart\ThreeLinesBreak\Display($width, $height);
         $oDisplay->setBlocks($aBlocks);
-        echo $oDisplay->getOutput();
+        end($aData);
+        $lastDate = key($aData);
+        $lastPrice = $aData[$lastDate];
+        echo $oDisplay->getOutput($lastPrice);
     } catch (\Chart\ChartException $ex) {
         echo "Ошибка: " . $ex->getMessage();
     }

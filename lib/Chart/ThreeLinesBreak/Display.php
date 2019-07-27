@@ -23,12 +23,15 @@ class Display extends \Chart\Base
         $this->aBlocks = $blocks;
     }
 
-    public function getOutput()
+    public function getOutput($markLevel=0)
     {
         $blockWidth = round($this->divWidth / count($this->aBlocks));
         $out =  '<div class="chart" style="width:' . $this->divWidth . 'px;height:' . $this->divHeight . 'px">';
         foreach ($this->aBlocks as $key => $block) {
             $out .= $this->getBlock($block, $blockWidth, ($key == 0));
+        }
+        if ($markLevel > 0) {
+            $out .= '<div title="' . $markLevel . '" class="last_price" style="top:' . ($this->divHeight - round($this->translateCoordinate($markLevel))) . 'px;width:' . $this->divWidth . 'px"</div>';
         }
         $out .= '</div>';
         $out .= '<div style="height:' . $this->divHeight . 'px;"></div>' . "\n";
