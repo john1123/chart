@@ -13,6 +13,19 @@ $(document).ready(function() {
     //});
 });
 
+$("#settings_save").on('click', function() {
+    var $btn = $(this);
+    $btn.button('loading');
+    var last = $("#settings_last").is(':checked');
+    var depth = $("#settings_depth").val();
+
+
+    //
+    setTimeout(function () {
+        $btn.button('reset');
+    }, 1000);
+});
+
 $(window).resize(function() {
     var $chartPlaceholder = $('#chart_placeholder');
     var width = $chartPlaceholder.width();

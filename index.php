@@ -109,6 +109,12 @@ if (count($aData) > 0) {
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
+            <a class="navbar-brand" href="<?= $_SERVER["SCRIPT_NAME"] ?>">
+                <img alt="Brand" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsSAAALEgHS3X78AAAE+UlEQVRIiaWW3WsUVxjGn/c9uzvZrDGJFrG2klTQIqQgpIWUurkwLUJBKYkfUBsb7/Kh10KtKaVXarE39ar0otAK5sN/oI2FxItECFoVrPEmS1qJ7u7MZndnNzNzznl7kQ+jSVtqn+Fw5ur3nue8Z+Y5hBeklFLGGAtAWltb9x4/duxEe7r9/ebm5j2O49QDQBAEC7OzszPjE+O/XBsa+ml6evoBgYgVszHGvMhcC48BQEtLy66R4ZGrC14h0GEklbIvBdcTL++Kl3el4HpSKfuiw0gWvEIwMjxytaWlZddaxkZwBQD9ff0n/VLZN1qLl3Nt7mlWu7m88fKudfOuuEtFrJvLm9zTrPZyrjXaSLlU8vt6e0++WESt2RbzxeDg2UtfX7ril33l+75hxczMTEQkEFJgMBEshEBEzMwgwPd9A0G86+iRzigMq+Pj4xNKKSUiolbgZ06f7rlw8eK3uadZTUS87IgAgECIcwyBjRBZgxp2QARYWJCAmImtCPyybw4dPnwwl81lpm5N3VZKKQKAffv27b45PjEdRVGdiFgi4hWLBEIkGl/+/iPuFjMgEHYmt+Krvd14xWmEUQRiBqyFCUNLRByPx0v70+nWO7/decQAMPj5+cFkMlmntdZr4QIBEyGwIR5X5xBHFTUU4MniHMqmChgLf24W5ZkHqD7+EwBYG6Nrk8m6wcHzgwAQa2tre6ujo6OzWCwiFoutOwGy7CIVq4EWjRgxrLWI1dah+MN3mLv2PVBTCxWG2HHmLDZ9dDxW8Dx0HOjobGtru8hdnV1HU6lU7cr5lVXocgFZmq3I6hCxsBCk/CJ2Ogk0NTTgtRgj4ZcgRLDGmFQqVXukq+sot6fTHWEYgplJAMSZ4CiCEQEDqI3Ti6aeuVMxCDEEAmEGlk46iJnCMER6f7oj1tTUtCcMQwhAyRjj/nwFF37NwA81jAgOvrkNn77TAFmx8lyFNX5FVu0yEYVhiKampj3sOE6jiEBAFGfgD9/ibsmBR3WYi1K449Iy/O+dbCASETiO07jaVFpeUEIRNtfEUOsoGGKkEuq/gNeJgyDwiAiy7E8EMGsaajfamn+XEBGCIPA4k8nMJBIJyEuSNpIVkUQigUwmM8MTNyfGEokEZMMuvpzEWkkkEpi4OTHGI6Ojw77vV5hZAQARoGhpJgJ4ubdMhGcPg0AA89IgPHsXgJVSvu9XRkZHh3lycvLe2I2x6/X19TBG68gKypEg1ILFSFCJBAJBxSwitBFC0aiaRRhYYLEKVCtAGAIVHxIG0Nbo+vrNGLsxdn1ycvKeAoCHD2fud3d/0sNAclFb+7hsqDbO2JpUePf1GrRuT2K2Mg8Dg02xFN5I7UB629twimWYggva3ADa/irUewdsfGezMkFQ6jl16sT8k3l3NWgG+gd6REQK2WxUcvM2n3OlkHelUvCkkPfE94qSy+Ukm8tK2SvKQt4Tr1QWz1sQL5sVt7Bgc24hEhEZ6B/oAZZyZjUUpm5N3Y7CqPrhoUMH/cqiiNWGmEnbpe3WYqBIQRFDi1n6frUGIKKtGCVCW7Y0qnOfnTt7+ZvLV1ZyZrXzKzHX19t7slws+UYbcXP55yJzJZOfj8y8NZGWcrHk9/X2dq9lrdP/DP03NoKv+8EopZQ11gpk5drycXu6/YPm5ubdjuM0AEAQBIXZ2dlH4xPjP18bGrr6T9eWvwCrtjIZeT5g2wAAAABJRU5ErkJggg==">
+            </a>
+            <ul class="nav navbar-nav">
+                <li><a id="options_toggle"  data-toggle="modal" data-target="#settingsModal" href="#">Настройки ...</a></li>
+            </ul>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
@@ -117,44 +123,14 @@ if (count($aData) > 0) {
             </button>
         </div>
         <div class="collapse navbar-collapse"  id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Избранное <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="?code=SBER">[SBER] Сбербанк России ПАО ао</a></li>
-                        <li><a href="?code=GAZP">[GAZP] "Газпром" (ПАО) ао</a></li>
-                        <li><a href="?code=LKOH">[LKOH] НК ЛУКОЙЛ (ПАО) -о</a></li>
-                        <li><a href="?code=SBERP">[SBERP] Сбербанк России ПАО ап</a></li>
-                        <li><a href="?code=GMKN">[GMKN] ГМК "Нор.Никель" ПАО ао</a></li>
-                        <li class="divider"></li>
-                        <li><a href="?code=PHOR">[PHOR] ФосАгро ПАОо</a></li>
-                        <li><a href="?code=TGKA">[TGKA] ао ПАО "ТГК-1"</a></li>
-                        <li><a href="?code=DSKY">[DSKY] ПАО Детский мир</a></li>
-                        <li><a href="?code=ALRS">[ALRS] АЛРОСА ПАО ао</a></li>
-                        <li><a href="?code=MTLRP">[MTLRP] Мечел ПАО ап</a></li>
-                        <li class="divider"></li>
-                        <li><a href="javascript:alert('В разработке')">Очистить избранное</a></li>
-                    </ul>
-                </li>
-            </ul>
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
-                <select id="input_code" name="code" data-placeholder="Тикер или название акции" class="form-control select2-single">
-                    <option value=""></option>
-<?php foreach (Data::getData() as $aStock) echo '                    <option value="' . $aStock[Data::IDX_CODE] . '"' . ($aStock[Data::IDX_CODE] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[Data::IDX_CODE] . '] ' . $aStock[Data::IDX_FULL] . "</option>\n"; ?>
-                </select>
-                </div>
-                <div class="form-group">
-                    <select  class="form-control" name="depth" title="Данные за сколько дней использовать для графика">
-                        <option value="30"<?=  ($depth == 25)  ? ' selected' : '' ?>>30</option>
-                        <option value="50"<?=  ($depth == 50)  ? ' selected' : '' ?>>50</option>
-                        <option value="75"<?=  ($depth == 75)  ? ' selected' : '' ?>>75</option>
-                        <option value="100"<?= ($depth == 100) ? ' selected' : '' ?>>100</option>
+                    <select id="input_code" name="code" data-placeholder="Тикер или название акции" class="form-control select2-single">
+                        <option value=""></option>
+<?php foreach (Data::getData() as $aStock) echo '                        <option value="' . $aStock[Data::IDX_CODE] . '"' . ($aStock[Data::IDX_CODE] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[Data::IDX_CODE] . '] ' . $aStock[Data::IDX_FULL] . "</option>\n"; ?>
                     </select>
                 </div>
-
                 <button type="submit" class="btn btn-primary" id="input_submit">Показать</button>
-                <a href="<?= $_SERVER["SCRIPT_NAME"] ?>" class="btn btn-default">Очистить</a>
             </form>
         </div>
     </div>
@@ -286,6 +262,41 @@ if (count($aData) > 0) {
     </div>
 
 <?php } ?>
+
+<!-- Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Настройки</h4>
+            </div>
+            <div class="modal-body">
+                <div class="checkbox">
+                    <label>
+                        <input id="settings_last" type="checkbox"> Отмечать последнюю цену на графике
+                    </label>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label>Данные за сколько дней использовать для графика
+                        <select id="settings_depth" class="form-control" title="Данные за сколько дней использовать для графика">
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="75">75</option>
+                            <option value="100">100</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" id="settings_save" class="btn btn-primary" data-loading-text="Сохраняем...">Сохранить настройки</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- scripts -->
 <script src="js/jquery.min.js"></script>
