@@ -13,6 +13,26 @@ $(document).ready(function() {
     //});
 });
 
+$("#settings_save").on('click', function() {
+    var $btn = $(this);
+    $btn.button('loading');
+    var settings = {
+        "showLastPrice" : $("#settings_last").is(':checked'),
+        "depth" : $("#settings_depth").val()
+    };
+    $.ajax({
+        type: "POST",
+        url: "index.php",
+        data: {
+            "settings": JSON.stringify(settings)
+        },
+        success: function(data) {
+            $btn.button('reset');
+            $('#settingsModal').modal('hide');
+        }
+    });
+});
+
 $(window).resize(function() {
     var $chartPlaceholder = $('#chart_placeholder');
     var width = $chartPlaceholder.width();
