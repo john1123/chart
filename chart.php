@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require_once 'autoloader.php';
 
 $width = \Helper\Arr::get($_GET, 'width', 600);
@@ -12,7 +14,14 @@ if (count($aData) > 0) {
         $aBlocks = $oMain->getBlocks();
         $oDisplay = new \Chart\ThreeLinesBreak\Display($width, $height);
         $oDisplay->setBlocks($aBlocks);
-        echo $oDisplay->getOutput();
+        end($aData);
+        $lastDate = key($aData);
+        $lastPrice = $aData[$lastDate];
+        if ($_SESSION['showLastPrice'] == true) {
+            echo $oDisplay->getOutput($lastPrice);
+        } else {
+            echo $oDisplay->getOutput();
+        }
     } catch (\Chart\ChartException $ex) {
         echo "Ошибка: " . $ex->getMessage();
     }

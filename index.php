@@ -9,7 +9,7 @@ $aData = [];
 // Настройки
 session_start();
 $defaultIntDepth = 50;
-$defaultBoolShowLastPrices = false;
+$defaultBoolShowLastPrice = false;
 $sSettings = \Helper\Arr::get($_POST, 'settings', '');
 if (strlen($sSettings) > 0) {
     $aSettings = json_decode($sSettings, true);
@@ -27,7 +27,6 @@ if (strlen($sSettings) > 0) {
     echo '{"success":"true","message":"Настройки установлены"}';
     die;
 }
-if
 
 $code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
 if (strlen($code) > 0) {
@@ -294,7 +293,7 @@ if (count($aData) > 0) {
             <div class="modal-body">
                 <div class="checkbox">
                     <label>
-                        <input id="settings_last" type="checkbox"<?= $settingsBoolShowLastPrice ? ' checked="checked"' : '' ?>> Отмечать последнюю цену на графике
+                        <input id="settings_last" type="checkbox"<?= \Helper\Arr::get($_SESSION, 'showLastPrice', $defaultBoolShowLastPrice) ? ' checked="checked"' : '' ?>> Отмечать последнюю цену на графике
                     </label>
                 </div>
                 <br><br>
