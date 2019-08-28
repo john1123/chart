@@ -16,14 +16,21 @@ $(document).ready(function() {
 $("#settings_save").on('click', function() {
     var $btn = $(this);
     $btn.button('loading');
-    var last = $("#settings_last").is(':checked');
-    var depth = $("#settings_depth").val();
-
-
-    //
-    setTimeout(function () {
-        $btn.button('reset');
-    }, 1000);
+    var settings = {
+        "showLastPrice" : $("#settings_last").is(':checked'),
+        "depth" : $("#settings_depth").val()
+    };
+    $.ajax({
+        type: "POST",
+        url: "index.php",
+        data: {
+            "settings": JSON.stringify(settings)
+        },
+        success: function(data) {
+            $btn.button('reset');
+            $('#settingsModal').modal('hide');
+        }
+    });
 });
 
 $(window).resize(function() {

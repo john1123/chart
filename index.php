@@ -6,6 +6,29 @@ $fullText='';
 $messages = [];
 $aData = [];
 
+// Настройки
+session_start();
+$defaultIntDepth = 50;
+$defaultBoolShowLastPrices = false;
+$sSettings = \Helper\Arr::get($_POST, 'settings', '');
+if (strlen($sSettings) > 0) {
+    $aSettings = json_decode($sSettings, true);
+    if (array_key_exists('showLastPrice', $aSettings)) {
+        $_SESSION['showLastPrice'] = $aSettings['showLastPrice'];
+    }
+    if (array_key_exists('depth', $aSettings)) {
+        $_SESSION['depth'] = intval($aSettings['depth']);
+        // Принудительно уменьшаем глубину до 100 если она больше
+        if ($_SESSION['depth'] > 100) {
+            $_SESSION['depth'] = 100;
+        }
+    }
+    header('Content-Type: application/json');
+    echo '{"success":"true","message":"Настройки установлены"}';
+    die;
+}
+if
+
 $code = strtoupper(\Helper\Arr::get($_GET, 'code', ''));
 if (strlen($code) > 0) {
     $isCodeValid = count(Data::searchByText($code)) > 0;
@@ -54,10 +77,7 @@ if (strlen($strRaw) > 0) {
         $aData = [];
     }
 } else {
-    $depth = \Helper\Arr::get($_GET, 'depth', 50);
-if ($depth > 150) {
-    $depth = 100;
-}
+    $depth = \Helper\Arr::get($_SESSION, 'depth', $defaultIntDepth);
     if (strlen($code) > 0) {
         $aActive = Data::searchByText($code);
         $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
@@ -274,17 +294,17 @@ if (count($aData) > 0) {
             <div class="modal-body">
                 <div class="checkbox">
                     <label>
-                        <input id="settings_last" type="checkbox"> Отмечать последнюю цену на графике
+                        <input id="settings_last" type="checkbox"<?= $settingsBoolShowLastPrice ? ' checked="checked"' : '' ?>> Отмечать последнюю цену на графике
                     </label>
                 </div>
                 <br><br>
                 <div class="form-group">
                     <label>Данные за сколько дней использовать для графика
                         <select id="settings_depth" class="form-control" title="Данные за сколько дней использовать для графика">
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="75">75</option>
-                            <option value="100">100</option>
+                            <option value="30"<?= \Helper\Arr::get($_SESSION, 'depth', $defaultIntDepth) == 30 ? ' selected="selected"' : '' ?>>30</option>
+                            <option value="50"<?= \Helper\Arr::get($_SESSION, 'depth', $defaultIntDepth) == 50 ? ' selected="selected"' : '' ?>>50</option>
+                            <option value="75"<?= \Helper\Arr::get($_SESSION, 'depth', $defaultIntDepth) == 75 ? ' selected="selected"' : '' ?>>75</option>
+                            <option value="100"<?= \Helper\Arr::get($_SESSION, 'depth', $defaultIntDepth) == 100 ? ' selected="selected"' : '' ?>>100</option>
                         </select>
                     </label>
                 </div>
