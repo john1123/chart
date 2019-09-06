@@ -128,25 +128,25 @@ if (count($aData) > 0) {
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="<?= $_SERVER["SCRIPT_NAME"] ?>">
-                <img alt="Brand" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsSAAALEgHS3X78AAAE+UlEQVRIiaWW3WsUVxjGn/c9uzvZrDGJFrG2klTQIqQgpIWUurkwLUJBKYkfUBsb7/Kh10KtKaVXarE39ar0otAK5sN/oI2FxItECFoVrPEmS1qJ7u7MZndnNzNzznl7kQ+jSVtqn+Fw5ur3nue8Z+Y5hBeklFLGGAtAWltb9x4/duxEe7r9/ebm5j2O49QDQBAEC7OzszPjE+O/XBsa+ml6evoBgYgVszHGvMhcC48BQEtLy66R4ZGrC14h0GEklbIvBdcTL++Kl3el4HpSKfuiw0gWvEIwMjxytaWlZddaxkZwBQD9ff0n/VLZN1qLl3Nt7mlWu7m88fKudfOuuEtFrJvLm9zTrPZyrjXaSLlU8vt6e0++WESt2RbzxeDg2UtfX7ril33l+75hxczMTEQkEFJgMBEshEBEzMwgwPd9A0G86+iRzigMq+Pj4xNKKSUiolbgZ06f7rlw8eK3uadZTUS87IgAgECIcwyBjRBZgxp2QARYWJCAmImtCPyybw4dPnwwl81lpm5N3VZKKQKAffv27b45PjEdRVGdiFgi4hWLBEIkGl/+/iPuFjMgEHYmt+Krvd14xWmEUQRiBqyFCUNLRByPx0v70+nWO7/decQAMPj5+cFkMlmntdZr4QIBEyGwIR5X5xBHFTUU4MniHMqmChgLf24W5ZkHqD7+EwBYG6Nrk8m6wcHzgwAQa2tre6ujo6OzWCwiFoutOwGy7CIVq4EWjRgxrLWI1dah+MN3mLv2PVBTCxWG2HHmLDZ9dDxW8Dx0HOjobGtru8hdnV1HU6lU7cr5lVXocgFZmq3I6hCxsBCk/CJ2Ogk0NTTgtRgj4ZcgRLDGmFQqVXukq+sot6fTHWEYgplJAMSZ4CiCEQEDqI3Ti6aeuVMxCDEEAmEGlk46iJnCMER6f7oj1tTUtCcMQwhAyRjj/nwFF37NwA81jAgOvrkNn77TAFmx8lyFNX5FVu0yEYVhiKampj3sOE6jiEBAFGfgD9/ibsmBR3WYi1K449Iy/O+dbCASETiO07jaVFpeUEIRNtfEUOsoGGKkEuq/gNeJgyDwiAiy7E8EMGsaajfamn+XEBGCIPA4k8nMJBIJyEuSNpIVkUQigUwmM8MTNyfGEokEZMMuvpzEWkkkEpi4OTHGI6Ojw77vV5hZAQARoGhpJgJ4ubdMhGcPg0AA89IgPHsXgJVSvu9XRkZHh3lycvLe2I2x6/X19TBG68gKypEg1ILFSFCJBAJBxSwitBFC0aiaRRhYYLEKVCtAGAIVHxIG0Nbo+vrNGLsxdn1ycvKeAoCHD2fud3d/0sNAclFb+7hsqDbO2JpUePf1GrRuT2K2Mg8Dg02xFN5I7UB629twimWYggva3ADa/irUewdsfGezMkFQ6jl16sT8k3l3NWgG+gd6REQK2WxUcvM2n3OlkHelUvCkkPfE94qSy+Ukm8tK2SvKQt4Tr1QWz1sQL5sVt7Bgc24hEhEZ6B/oAZZyZjUUpm5N3Y7CqPrhoUMH/cqiiNWGmEnbpe3WYqBIQRFDi1n6frUGIKKtGCVCW7Y0qnOfnTt7+ZvLV1ZyZrXzKzHX19t7slws+UYbcXP55yJzJZOfj8y8NZGWcrHk9/X2dq9lrdP/DP03NoKv+8EopZQ11gpk5drycXu6/YPm5ubdjuM0AEAQBIXZ2dlH4xPjP18bGrr6T9eWvwCrtjIZeT5g2wAAAABJRU5ErkJggg==">
-            </a>
-            <ul class="nav navbar-nav">
-                <li><a id="options_toggle"  data-toggle="modal" data-target="#settingsModal" href="#">Настройки ...</a></li>
-            </ul>
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main" aria-expanded="false">
+                <span class=sr-only>Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <a class="navbar-brand" href="<?= $_SERVER["SCRIPT_NAME"] ?>">
+                <img alt="Brand" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsSAAALEgHS3X78AAAE+UlEQVRIiaWW3WsUVxjGn/c9uzvZrDGJFrG2klTQIqQgpIWUurkwLUJBKYkfUBsb7/Kh10KtKaVXarE39ar0otAK5sN/oI2FxItECFoVrPEmS1qJ7u7MZndnNzNzznl7kQ+jSVtqn+Fw5ur3nue8Z+Y5hBeklFLGGAtAWltb9x4/duxEe7r9/ebm5j2O49QDQBAEC7OzszPjE+O/XBsa+ml6evoBgYgVszHGvMhcC48BQEtLy66R4ZGrC14h0GEklbIvBdcTL++Kl3el4HpSKfuiw0gWvEIwMjxytaWlZddaxkZwBQD9ff0n/VLZN1qLl3Nt7mlWu7m88fKudfOuuEtFrJvLm9zTrPZyrjXaSLlU8vt6e0++WESt2RbzxeDg2UtfX7ril33l+75hxczMTEQkEFJgMBEshEBEzMwgwPd9A0G86+iRzigMq+Pj4xNKKSUiolbgZ06f7rlw8eK3uadZTUS87IgAgECIcwyBjRBZgxp2QARYWJCAmImtCPyybw4dPnwwl81lpm5N3VZKKQKAffv27b45PjEdRVGdiFgi4hWLBEIkGl/+/iPuFjMgEHYmt+Krvd14xWmEUQRiBqyFCUNLRByPx0v70+nWO7/decQAMPj5+cFkMlmntdZr4QIBEyGwIR5X5xBHFTUU4MniHMqmChgLf24W5ZkHqD7+EwBYG6Nrk8m6wcHzgwAQa2tre6ujo6OzWCwiFoutOwGy7CIVq4EWjRgxrLWI1dah+MN3mLv2PVBTCxWG2HHmLDZ9dDxW8Dx0HOjobGtru8hdnV1HU6lU7cr5lVXocgFZmq3I6hCxsBCk/CJ2Ogk0NTTgtRgj4ZcgRLDGmFQqVXukq+sot6fTHWEYgplJAMSZ4CiCEQEDqI3Ti6aeuVMxCDEEAmEGlk46iJnCMER6f7oj1tTUtCcMQwhAyRjj/nwFF37NwA81jAgOvrkNn77TAFmx8lyFNX5FVu0yEYVhiKampj3sOE6jiEBAFGfgD9/ibsmBR3WYi1K449Iy/O+dbCASETiO07jaVFpeUEIRNtfEUOsoGGKkEuq/gNeJgyDwiAiy7E8EMGsaajfamn+XEBGCIPA4k8nMJBIJyEuSNpIVkUQigUwmM8MTNyfGEokEZMMuvpzEWkkkEpi4OTHGI6Ojw77vV5hZAQARoGhpJgJ4ubdMhGcPg0AA89IgPHsXgJVSvu9XRkZHh3lycvLe2I2x6/X19TBG68gKypEg1ILFSFCJBAJBxSwitBFC0aiaRRhYYLEKVCtAGAIVHxIG0Nbo+vrNGLsxdn1ycvKeAoCHD2fud3d/0sNAclFb+7hsqDbO2JpUePf1GrRuT2K2Mg8Dg02xFN5I7UB629twimWYggva3ADa/irUewdsfGezMkFQ6jl16sT8k3l3NWgG+gd6REQK2WxUcvM2n3OlkHelUvCkkPfE94qSy+Ukm8tK2SvKQt4Tr1QWz1sQL5sVt7Bgc24hEhEZ6B/oAZZyZjUUpm5N3Y7CqPrhoUMH/cqiiNWGmEnbpe3WYqBIQRFDi1n6frUGIKKtGCVCW7Y0qnOfnTt7+ZvLV1ZyZrXzKzHX19t7slws+UYbcXP55yJzJZOfj8y8NZGWcrHk9/X2dq9lrdP/DP03NoKv+8EopZQ11gpk5drycXu6/YPm5ubdjuM0AEAQBIXZ2dlH4xPjP18bGrr6T9eWvwCrtjIZeT5g2wAAAABJRU5ErkJggg==">
+            </a>
         </div>
-        <div class="collapse navbar-collapse"  id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse" id="navbar-main">
+            <ul class="nav navbar-nav navbar-left">
+                <li><a id="options_toggle" data-toggle="modal" data-target="#settingsModal" href="#">Настройки ...</a></li>
+            </ul>
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
-                    <select id="input_code" name="code" data-placeholder="Тикер или название акции" class="form-control select2-single">
+                    <select id="input_code" name="code" data-placeholder="Тикер или название акции" class="form-control select2-single" style="min-width: 450px; width: 450px">
                         <option value=""></option>
-<?php foreach (Data::getData() as $aStock) echo '                        <option value="' . $aStock[Data::IDX_CODE] . '"' . ($aStock[Data::IDX_CODE] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[Data::IDX_CODE] . '] ' . $aStock[Data::IDX_FULL] . "</option>\n"; ?>
+                        <?php foreach (Data::getData() as $aStock) echo '                        <option value="' . $aStock[Data::IDX_CODE] . '"' . ($aStock[Data::IDX_CODE] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[Data::IDX_CODE] . '] ' . $aStock[Data::IDX_FULL] . "</option>\n"; ?>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary" id="input_submit">Показать</button>
