@@ -140,11 +140,18 @@ if (count($aData) > 0) {
         </div>
         <div class="collapse navbar-collapse" id="navbar-main">
             <ul class="nav navbar-nav navbar-left">
-                <li><a id="options_toggle" data-toggle="modal" data-target="#settingsModal" href="#">Настройки ...</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Дополнительно <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a data-toggle="modal" data-target="#settingsModal" href="#">Настройки ...</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a data-toggle="modal" data-target="#aboutModal" href="#">О программе ...</a></li>
+                    </ul>
+                </li>
             </ul>
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
-                    <select id="input_code" name="code" data-placeholder="Тикер или название акции" class="form-control select2-single" style="min-width: 450px; width: 450px">
+                    <select id="input_code" name="code" data-placeholder="Тикер или название акции" class="form-control select2-single" style="min-width: 430px; width: 430px">
                         <option value=""></option>
                         <?php foreach (Data::getData() as $aStock) echo '                        <option value="' . $aStock[Data::IDX_CODE] . '"' . ($aStock[Data::IDX_CODE] == $code ? ' selected="selected"' : ''). '>' . '[' . $aStock[Data::IDX_CODE] . '] ' . $aStock[Data::IDX_FULL] . "</option>\n"; ?>
                     </select>
@@ -282,7 +289,7 @@ if (count($aData) > 0) {
 
 <?php } ?>
 
-<!-- Modal -->
+<!-- settingsModal -->
 <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -311,6 +318,31 @@ if (count($aData) > 0) {
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                 <button type="button" id="settings_save" class="btn btn-primary" data-loading-text="Сохраняем...">Сохранить настройки</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- aboutModal Временное решение. Нужно объединить модальные окна в одно! -->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">О программе</h4>
+            </div>
+            <div class="modal-body">
+                <p><?php
+                    $data = file_get_contents('./README');
+                    if (preg_match('/RELEASE([^(]+)\(([^)]+)\)/', $data, $regs)) {
+                        echo 'Версия ' .  $regs[1] . ' от ' . $regs[2] . ' г.';
+                    }
+                    ?></p>
+                <div class="container-fluid">
+                    <textarea name="" cols="30" rows="10" style="width: 100%" readonly="readonly"><?= $data ?></textarea>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>
