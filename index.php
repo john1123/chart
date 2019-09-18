@@ -81,11 +81,16 @@ if (strlen($strRaw) > 0) {
         $aActive = Data::searchByText($code);
         $fullText = '[' . $code . '] ' . $aActive[Data::IDX_FULL];
 
-        $oMoex = new \Exchange\Moex($code, [
-            'cacheDirectory' => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
-            'cacheRefresh' => \Helper\Arr::get($_GET, 'refresh', 'false'),
-        ]);
-        $aData = $oMoex->load($depth);
+        try {
+            $oMoex = new \Exchange\Moex($code, [
+                'cacheDirectory' => __DIR__ . DIRECTORY_SEPARATOR . 'cache',
+                'cacheRefresh' => \Helper\Arr::get($_GET, 'refresh', 'false'),
+            ]);
+            $aData = $oMoex->load($depth);
+        } catch (\Exception $ex) {
+            header('Content-Type: text/html; charset=utf-8');
+            die ('FATAL: ' . $ex->getMessage());
+        }
 
         // убираем все дни с нулевой ценой
         $emptyDays = 0;

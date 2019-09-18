@@ -11,13 +11,13 @@ class File extends \Base implements ICache
 
         $cacheDirectory = $this->getOption('cacheDirectory', 'cache');
 
-        // Пытаемся создать папку для кеша
+        // РџС‹С‚Р°РµРјСЃСЏ СЃРѕР·РґР°С‚СЊ РїР°РїРєСѓ РґР»СЏ РєРµС€Р°
         if(!is_dir($cacheDirectory)){
-            //mkdir($cacheDirectory, 0777);
+            mkdir($cacheDirectory, 0777);
         }
-        // Если директории по прежнему нет - ошибка
-        if (!is_dir($cacheDirectory)) {
-            throw new \Exception('Папки ' . $cacheDirectory . ' не существует. Создайте, пожалуйста и присвойте ей права на запись');
+        // Р•СЃР»Рё РґРёСЂРµРєС‚РѕСЂРёРё РїРѕ РїСЂРµР¶РЅРµРјСѓ РЅРµС‚ - РѕС€РёР±РєР°
+        if (!is_dir($cacheDirectory) || !is_writable($cacheDirectory)) {
+            throw new \Exception('РџР°РїРєРё ' . $cacheDirectory . ' РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РёР»Рё РЅРµР»СЊР·СЏ РїРёСЃР°С‚СЊ РІ РЅРµС‘.');
         }
     }
 
