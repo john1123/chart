@@ -8,6 +8,17 @@ class File extends \Base implements ICache
 
     public function __construct(array $aOptions=[]) {
         parent::__construct($aOptions);
+
+        $cacheDirectory = $this->getOption('cacheDirectory', 'cache');
+
+        // Пытаемся создать папку для кеша
+        if(!is_dir($cacheDirectory)){
+            //mkdir($cacheDirectory, 0777);
+        }
+        // Если директории по прежнему нет - ошибка
+        if (!is_dir($cacheDirectory)) {
+            throw new \Exception('Папки ' . $cacheDirectory . ' не существует. Создайте, пожалуйста и присвойте ей права на запись');
+        }
     }
 
     public function get($name, $default='') {
