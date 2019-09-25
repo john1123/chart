@@ -6,6 +6,32 @@ class Arr
 {
     const ARRAY_DELIMITER = '->';
 
+
+    /**
+     * Возвращает значение с указанным ключом из массива и удаляет это значение
+     */
+    public static function cut($array, $key, $default = null)
+    {
+        $value = self::get($array, $key, $default);
+        //if ($value !== $default) {
+            self::delete($array, $key);
+        //}
+        return $value;
+    }
+
+    /**
+     * Удаляет значение с указанным ключом из массива
+     */
+    public static function delete($array, $keys)
+    {
+        $keys_arr = explode(self::ARRAY_DELIMITER, $keys);
+        $value = $array;
+        foreach ($keys_arr as $key) {
+            $value = self::delete($value, $key);
+        }
+        return $value;
+    }
+
     public static function get($array, $key, $default = null)
     {
         if (!is_array($array)) {
